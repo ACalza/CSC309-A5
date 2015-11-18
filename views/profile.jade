@@ -1,0 +1,80 @@
+extends layout
+
+block content
+  .jumbotron
+        div(style="text-align: left")
+              span(style="display-inline; font-size: 20px; margin-right: 10px") #{profUser.displayName}
+              if !edit && (user.type.indexOf("Admin") >= 0 || user._id == profUser._id)
+                a(href="/profile/edit/" + profUser._id) Edit
+              if user.type.indexOf("Admin") >= 0
+                a(style='margin-left: 10px;', href="/analytics/" + profUser._id) Analytics
+        div
+          form(action="/profile/edit/" + profUser._id, method="post", style="display: inline-block;")
+              if errorMsg
+                div.alert.alert-danger(role='alert')= errorMsg
+              if successMsg
+                div.alert.alert-success(role='alert')= successMsg
+              div.col-md-4(style="text-align: left")
+                img.img-thumbnail(width=100, height=100, src=profUser.img)
+                br
+                span Powered by 
+                    a(href="http://gravatar.com", target="_blank") Gravatar
+                br
+                //
+                    Admins can only delete non admins
+                if profUser.type != "SAdmin"
+                    if (user.type.indexOf("Admin") >= 0 && profUser.type == "User") || user.type == "SAdmin"
+                        a.btn.btn-danger(href='/user/delete/' + profUser._id, style='margin-bottom: 10px;') Delete
+                        br
+                    if user.type == "SAdmin"
+                        if profUser.type.indexOf("Admin") < 0
+                            a.btn.btn-success(href='/user/promote/' + profUser._id) Promote
+                        else
+                            a.btn.btn-warning(href='/user/demote/' + profUser._id) Demote
+              div.col-md-8 
+                div.row
+                   div.col-md-4
+                     p Email
+                   div.col-md-8
+                     if !edit
+                       p= profUser.email
+                     else
+                       input#email.form-control(type='email', name='email', required='required', value=profUser.email, readonly='readonly')
+                div.row
+                   div.col-md-4
+                     p Display Name
+                   div.col-md-8
+                     if !edit
+                       p= profUser.displayName
+                     else
+                       input#displayName.form-control(type='text', name='displayName', value=profUser.displayName)
+                div.row
+                   div.col-md-4
+                     p Description
+                   div.col-md-8
+                     if !edit
+                       p= profUser.description
+                     else
+                       input#description.form-control(type='text', name='description', value=profUser.description)
+                if edit
+                  button.btn.btn-success(type='submit', style='margin-right: 10px;') Save
+                  a.btn.btn-danger(href='/profile/') Cancel
+        if edit && user._id == profUser._id
+            div.row
+              form(action="/profile/edit/" + profUser._id + "/changepw" , method="post")
+                if errorChangePWMsg
+                  div.alert.alert-danger(role='alert')= errorChangePWMsg
+                if successChangePWMsg
+                  div.alert.alert-success(role='alert')= successChangePWMsg
+                br
+                input#oldpassword.form-control(type='password', name='oldpassword', required='required', placeholder='Old Password')
+                br
+                input#newpassword.form-control(type='password', name='newpassword', required='required', placeholder='New Password')
+                br
+                input#confpassword.form-control(type='password', name='confpassword', required='required', placeholder='Confirm New Password')
+                br
+                button.btn.btn-success(type='submit', style='margin-right: 10px;') Change Password
+
+       
+               
+              

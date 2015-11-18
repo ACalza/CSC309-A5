@@ -1,0 +1,32 @@
+extends layout
+
+block content
+  if errorMsg
+    div.alert.alert-danger(role='alert')= errorMsg
+
+  form(role='form', action='/user/register' method='post')
+      .form-group
+        label(for='displayname') Display Name:
+        if fieldStates
+          input#email.form-control(type='text', name='displayName', value=fieldStates.displayName)
+        else
+          input#email.form-control(type='text', name='displayName')
+      .form-group
+        label(for='email') Email:
+        if fieldStates
+          input#email.form-control(type='email', name='email', required='required', value=fieldStates.email)
+        else
+          input#email.form-control(type='email', name='email', required='required')
+      .form-group
+        label(for='pwd') Password:
+        input#pwd.form-control(type='password', name='password', required='required')
+      .form-group
+        label(for='pwd') Confirm Password:
+        input#pwd.form-control(type='password', name='confirmPassword', required='required')
+      .form-group
+        label(for='pwd') Description:
+        if fieldStates
+          input#pwd.form-control(type='description', name='description', value=fieldStates.description)
+        else
+          input#pwd.form-control(type='description', name='description')
+      button.btn.btn-default(type='submit') Register

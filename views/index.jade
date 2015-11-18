@@ -1,0 +1,30 @@
+extends layout
+
+block content
+  .jumbotron
+    if user
+        if user.type == "User"
+            h2 Welcome, #{user.displayName}
+        else
+            h2 Welcome, Administrator #{user.displayName}
+        table.table.table-striped
+            thead
+              tr
+                th(style='text-align: center') Display Name
+                th(style='text-align: center') Email
+            tbody
+                mixin user(display, email, id)
+                    tr
+                        td
+                            a(href="/profile/view/" + id)= display
+                        td
+                            a(href="/profile/view/" + id)= email
+                for usr in allUsers
+                    +user(usr.displayName, usr.email, usr._id)  
+                            
+    else
+        h1 Welcome to Profiles
+        p
+          a.btn.btn-lg.btn-success(href='/user/register', role='button') Register
+        p
+          a.btn.btn-lg.btn-success(href='/user/login', role='button') Sign in

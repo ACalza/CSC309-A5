@@ -1,0 +1,46 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    // The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags
+    meta(name='description', content='')
+    meta(name='author', content='')
+    title Profile
+    // Bootstrap core CSS
+    link(href='/stylesheets/bootstrap.css', rel='stylesheet')
+    // Custom styles for this template
+    link(href='/stylesheets/jumbotron-narrow.css', rel='stylesheet')
+    link(href='/stylesheets/style.css', rel='stylesheet')
+    script(src='http://code.jquery.com/jquery-1.11.3.min.js')
+    script(src='/javascripts/bootstrap.js')
+  body
+    .container
+      .header.clearfix
+        //
+          <nav>
+          <ul class="nav nav-pills pull-right">
+          <li role="presentation" class="active"><a href="#">Home</a></li>
+          <li role="presentation"><a href="#">About</a></li>
+          <li role="presentation"><a href="#">Contact</a></li>
+          </ul>
+          </nav>
+        if user == null
+            h4.pull-right Please 
+                a(href='/user/login') login
+        else
+            h4.pull-right 
+                 if user.type == "User"
+                    p(style="display: inline;") Hey, 
+                 else
+                    p(style="display: inline;") Hey, Admin 
+                 a(href='/profile/') #{user.displayName}
+                    img.img-thumbnail(width=50, height=50, src=user.img, style="margin-left: 10px; margin-right: 10px")
+                 a(href='/user/logout/') Logout
+        h3.text-muted 
+            a(href="/") Profiles
+
+      block content
+      footer.footer
+        p © Roman Polyanovsky 2015

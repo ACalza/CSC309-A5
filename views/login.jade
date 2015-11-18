@@ -1,0 +1,27 @@
+extends layout
+
+block content
+  script(type="text/javascript").
+        $(document).ready(function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                $("#location").val("Unsupported");
+            }
+        });
+        function showPosition(position)
+        {
+            $("#location").val(position.coords.latitude + "," + position.coords.longitude);
+        }
+  if errorMsg
+    div.alert.alert-danger(role='alert')= errorMsg
+
+  form(role='form', action='/user/login' method='post')
+      .form-group
+        label(for='email') Email:
+        input#email.form-control(type='email', name='email', required='required')
+      .form-group
+        label(for='pwd') Password:
+        input#pwd.form-control(type='password', name='password', required='required')
+      input#location(type='hidden', name='location', value='Denied')
+      button.btn.btn-default(type='submit') Login
