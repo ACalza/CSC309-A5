@@ -1,7 +1,7 @@
 var express = require('express');
 var crypto = require('crypto');
 var router = express.Router();
-var User = require('../model');
+var models = require('../model');
 var util = require('../util');
 var uaparse = require('ua-parser-js');
 
@@ -26,7 +26,7 @@ router.post('/login', function (req, res, next) {
     var pass = req.body.password;
     var loc = req.body.location;
     pass = util.md5hash(pass);
-    User.findOne({
+    models.User.findOne({
         email: email,
         password: pass
     }, function (err, user) {
@@ -119,7 +119,7 @@ router.post('/register', function (req, res, next) {
         }
 
         //Create user instance
-        var u = new User({
+        var u = new models.User({
             displayName: displayName,
             email: email,
             password: util.md5hash(pass),
@@ -201,7 +201,7 @@ router.get('/promote/:id', function (req, res, next) {
     //Only super admin can promote
     if (req.session.curUser.type == "SAdmin") {
         //Find the user
-        User.findOne({
+        models.User.findOne({
             _id: req.params.id
         }, function (err, user) {
             if (err) {
@@ -247,7 +247,7 @@ router.get('/demote/:id', function (req, res, next) {
     //Only super admin can demote
     if (req.session.curUser.type == "SAdmin") {
         //Find user
-        User.findOne({
+        models.User.findOne({
             _id: req.params.id
         }, function (err, user) {
             if (err) {
@@ -304,7 +304,7 @@ router.get('/delete/:id', function (req, res, next) {
     //Only admin+ can delete
     if (req.session.curUser.type.indexOf("Admin") >= 0) {
         //Find user (to validate before deletion)
-        User.findOne({
+        models.User.findOne({
             _id: req.params.id
         }, function (err, user) {
             if (err) {

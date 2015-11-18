@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var User = null;
-
+var Models = {}
 mongoose.connect('mongodb://localhost/users');
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -24,6 +24,6 @@ var userSchema = mongoose.Schema({
     loginDates: [String],
     loginLocations: [String]
 });
-User = mongoose.model('User', userSchema);
+Models.User = mongoose.model('User', userSchema);
 
-module.exports = User;
+module.exports = Models;

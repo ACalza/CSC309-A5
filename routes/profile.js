@@ -1,7 +1,7 @@
 var express = require('express');
 var crypto = require('crypto');
 var router = express.Router();
-var User = require('../model');
+var models = require('../model');
 var util = require('../util');
 
 /* GET profile page */
@@ -31,7 +31,7 @@ router.get("/view/:id", function (req, res, next) {
     } else {
 
         //Not current user, so find them
-        User.findOne({
+        models.User.findOne({
             _id: req.params.id
         }, function (err, user) {
             if (err) {
@@ -71,7 +71,7 @@ router.get('/edit/:id/:command?', function (req, res, next) {
     }
     if (req.session.curUser.type.indexOf("Admin") >= 0 || req.session.curUser._id == req.params.id) {
         //May or may not be our own id, we are agnostic
-        User.findOne({
+        models.User.findOne({
             _id: req.params.id
         }, function (err, user) {
             if (err) {
@@ -120,7 +120,7 @@ router.post('/edit/:id/:command?', function (req, res, next) {
         if (!req.params.command) {
 
             //Find the user (maybe owner maybe not)
-            User.findOne({
+            models.User.findOne({
                 _id: req.params.id
             }, function (err, user) {
                 if (err) {
@@ -195,7 +195,7 @@ router.post('/edit/:id/:command?', function (req, res, next) {
                     });
                 } else {
                     //Password change/fields valid
-                    User.findOne({
+                    models.User.findOne({
                         _id: req.params.id
                     }, function (err, user) {
                         if (err) {
