@@ -1,7 +1,11 @@
-var express = require('express');
-var models = require('../model');
-var router = express.Router();
 
+//Routes
+var analytics = require("./analytics");
+var profile = require("./profile");
+var user = require("./user");
+var express = require("express");
+var models = require("../models/index");
+var router = express.Router();
 
 
 /* GET home page. */
@@ -20,4 +24,10 @@ router.get('/', function (req, res, next) {
     }
 });
 
-module.exports = router;
+//All routes to be exported and added here
+module.exports = {
+    "analytics": analytics,
+    "profile": profile,
+    "user": user,
+    "/" : router
+}

@@ -1,7 +1,7 @@
 var express = require('express');
-var models = require('../model');
-var router = express.Router();
+var models = require("../models/index");
 
+var router = express.Router();
 
 
 /* GET analytics page. */
@@ -58,7 +58,7 @@ router.get('/:id?', function (req, res, next) {
     }
 });
 
-//Simple function to merge two arrays - one of strings and one of corresponding numbers, 
+//Simple function to merge two arrays - one of strings and one of corresponding numbers,
 //then sort them by numbers, and return the top 3 values.
 function orderFavs(pages, visits) {
     var pairs = [];

@@ -3,10 +3,20 @@
 /**
  * Module dependencies.
  */
-
+var models = require("./models/index");
+var routes = require("./routes/index");
 var app = require('./app');
 var debug = require('debug')('a4:server');
 var http = require('http');
+var mongoose = require("mongoose");
+
+/**
+ * Connect to mongoose server
+ */
+mongoose.connect('mongodb://localhost/a5', {
+    user: '',
+    pass: ''
+});
 
 /**
  * Get port from environment and store in Express.

@@ -1,7 +1,7 @@
 var express = require('express');
 var crypto = require('crypto');
 var router = express.Router();
-var models = require('../model');
+var models = require("../models/index");
 var util = require('../util');
 
 /* GET profile page */
@@ -86,7 +86,7 @@ router.get('/edit/:id/:command?', function (req, res, next) {
                     message: "User not found"
                 });
             } else {
-                //Show editable version. 
+                //Show editable version.
                 //View will take care of allowing password changes (but we double check in the post function JIC)
                 res.render('profile', {
                     user: req.session.curUser,
@@ -176,7 +176,7 @@ router.post('/edit/:id/:command?', function (req, res, next) {
                     message: "Unauthorized"
                 });
             } else {
-                //Validation (having it on server gives more security since client page can be 
+                //Validation (having it on server gives more security since client page can be
                 // tampered with to skip validation. Also don't need to send password (even in hashed form) to client)
                 if (util.md5hash(req.body.oldpassword) != req.session.curUser.password) {
                     res.render('profile', {

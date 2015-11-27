@@ -8,7 +8,6 @@ var bodyParser = require('body-parser');
 var crypto = require('crypto');
 var util = require('./util');
 
-
 var app = express();
 var mongoose = require('mongoose');
 
@@ -35,8 +34,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 //=================MY MODULES
 var routes = require('./routes/index');
 var profile = require('./routes/profile');
-var user = require('./routes/user')
-var analytics = require('./routes/analytics')
+var user = require('./routes/user');
+var analytics = require('./routes/analytics');
+
 app.use(function (req, res, next) {
     //Analytics hook for tracking user activity.
     if (req.session.curUser) {
@@ -78,10 +78,10 @@ app.use(function (req, res, next) {
 
 });
 
-app.use('/', routes);
-app.use('/profile', profile);
-app.use('/user', user);
-app.use('/analytics', analytics);
+//Build all routes
+for(route in routes){
+    app.use('/' + route, routes[route]);
+}
 
 
 // catch 404 and forward to error handler
@@ -92,7 +92,6 @@ app.use(function (req, res, next) {
 });
 
 // error handlers
-
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {

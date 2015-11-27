@@ -1,6 +1,5 @@
 var crypto = require("crypto");
-var models = require('./model');
-
+var models = require("./models/index");
 
 var util = {
     //Simple shorthand for model.save to allow error and success be passed as functions.
@@ -52,8 +51,8 @@ var util = {
 
 
 
-    // Checks if there is at least one user matching params. If there is calls gtz (greaterThanZero). 
-    // Otherwise calls zero. If an error occurs calls error with the error as a parameter. 
+    // Checks if there is at least one user matching params. If there is calls gtz (greaterThanZero).
+    // Otherwise calls zero. If an error occurs calls error with the error as a parameter.
     moreThanZero: function (params, error, zero, gtz) {
         models.User.count(params, function (err, count) {
             if (err) {

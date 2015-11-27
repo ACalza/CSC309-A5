@@ -1,9 +1,9 @@
 var express = require('express');
 var crypto = require('crypto');
 var router = express.Router();
-var models = require('../model');
 var util = require('../util');
 var uaparse = require('ua-parser-js');
+var models = require("../models/index");
 
 /* GET login */
 router.get('/login', function (req, res, next) {
