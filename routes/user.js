@@ -67,7 +67,8 @@ router.post('/register', function (req, res, next) {
             password: util.md5hash(pass),
             type: "User",
             img: "http://gravatar.com/avatar/" + util.md5hash(email),
-            description: description
+            description: description,
+            accountSource: "Local"
         });
 
         //Check to see if there is more than one user

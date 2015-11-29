@@ -31,6 +31,7 @@ var google = function (router, authCompleteCallback) {
                         console.log(err);
                         return null;
                     }
+                    response.access_token = tokens.access_token;
                     authCompleteCallback(response, req, res, next);
                 });
             } else {

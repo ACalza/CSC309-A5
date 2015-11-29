@@ -16,7 +16,7 @@ block content
   if errorMsg
     div.alert.alert-danger(role='alert')= errorMsg
 
-  form(role='form', action='/auth/user/login' method='post')
+  form(role='form', action='/auth/local/login' method='post')
       .form-group
         label(for='email') Email:
         input#email.form-control(type='email', name='email', required='required')
@@ -27,3 +27,4 @@ block content
       button.btn.btn-default(type='submit') Login
   br
   a.btn.btn-info(href='/auth/google/login', role='button') Login with Google
+  a.btn.btn-info(href='/auth/minecraft/login', role='button') Login with Minecraft

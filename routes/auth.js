@@ -5,11 +5,13 @@ var models = require("../models/index");
 var util = require('../util');
 var googleAuth = require('../auth/google');
 var localAuth = require('../auth/local');
+var minecraftAuth = require('../auth/minecraft');
 var uaparse = require('ua-parser-js');
 
 
 googleAuth(router, googleAuthComplete);
 localAuth(router, authComplete);
+minecraftAuth(router, minecraftAuthComplete);
 
 function authComplete(user, req, res, next) {
     if (!req.session.curUser)
@@ -25,32 +27,51 @@ function authComplete(user, req, res, next) {
 
 }
 
-function googleAuthComplete(getinfo_response, req, res, next) {
+function googleAuthComplete(data, req, res, next) {
+    thirdPartyAuthComplete(data.email, data.name, data.picture, data.access_token, "Google", req, res, next);
+}
+
+function minecraftAuthComplete(data, req, res, next) {
+    thirdPartyAuthComplete(data.email, data.name, data.picture, data.access_token, "Minecraft", req, res, next);
+}
+
+function thirdPartyAuthComplete(email, displayName, picture, access_token, auth_service, req, res, next) {
     models.User.findOne({
-        email: getinfo_response.email
+        email: email
     }, function (err, user) {
         if (err) {
             console.log(err);
             //TODO: Show error
         } else {
+            var u = null;
             if (user) {
-                //Already have a user in our database with this username
-                authComplete(user, req, res, next);
+                u = user;
+                //Already have a user in our database with this username, update
+                u.displayName = displayName;
+                u.email = email;
+                u.img = picture;
+                if (access_token) {
+                    u.accessTokens[auth_service] = access_token;
+                }
             } else {
-                //Now things get a bit complicated. We need to make a new user.
-                var u = new models.User({
-                    displayName: getinfo_response.name,
-                    email: getinfo_response.email,
+                //We need to make a new user, based on the third-party auth
+                u = new models.User({
+                    displayName: displayName,
+                    email: email,
                     type: "User",
-                    img: getinfo_response.picture ? getinfo_response.picture : "http://gravatar.com/avatar/" + util.md5hash(getinfo_response.email),
-                    description: ""
+                    img: picture,
+                    description: "",
+                    accountSource: auth_service,
                 });
-                util.saveModel(u, function (err) {
-                    console.log(err);
-                }, function (user) {
-                    authComplete(user, req, res, next);
-                });
+                if (access_token) {
+                    u.accessTokens[auth_service] = access_token;
+                }
             }
+            util.saveModel(u, function (err) {
+                console.log(err);
+            }, function (user) {
+                authComplete(user, req, res, next);
+            });
         }
 
     });
