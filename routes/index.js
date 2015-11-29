@@ -1,5 +1,5 @@
-
 //Routes
+var auth = require("./auth");
 var analytics = require("./analytics");
 var profile = require("./profile");
 var user = require("./user");
@@ -26,8 +26,9 @@ router.get('/', function (req, res, next) {
 
 //All routes to be exported and added here
 module.exports = {
+    "auth": auth,
     "analytics": analytics,
     "profile": profile,
     "user": user,
-    "/" : router
+    "/": router
 }
