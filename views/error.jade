@@ -1,5 +1,8 @@
 extends header
 
+block append extraHeader
+    link(href='/stylesheets/bootstra-sortable.css', rel='stylesheet')
+
 block content
   h1= message
   if error
