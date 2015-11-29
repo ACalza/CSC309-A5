@@ -1,0 +1,33 @@
+extends header
+
+block append extraHeader
+    link(href='/stylesheets/sortable-theme-minimal.css', rel='stylesheet')
+    script(src='/javascripts/sortable.min.js')
+        
+mixin server(name, title, map, curr_players, max_players, ip, port)
+    tr
+        td=name
+        td=title
+        td=map
+        td(data-value=curr_players)=curr_players + '/' + max_players
+        td=ip + ":" + port
+
+//NOTE: ACTUAL CONTENTS WILL CHANGE.
+block content
+    .container
+        //This is reserved for important stuff, like search bar and filters
+        p Search parameters
+    .container
+        table.table(data-sortable='')
+            thead
+                tr
+                    th Name
+                    th Title
+                    th Map
+                    th Players
+                    th IP:Port                   
+            tbody
+                each server in servers
+                    +server(server.name, server.title, server.map, server.numPlayersOnline, server.maxPlayers, server.ip, server.port)
+    
+        
