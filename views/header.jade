@@ -1,6 +1,37 @@
 extends layout
 
 
+
+
+block header
+
+    .container
+          .header.clearfix
+            //
+              <nav>
+              <ul class="nav nav-pills pull-right">
+              <li role="presentation" class="active"><a href="#">Home</a></li>
+              <li role="presentation"><a href="#">About</a></li>
+              <li role="presentation"><a href="#">Contact</a></li>
+              </ul>
+              </nav>
+            if user == null
+                h4.pull-right Please 
+                    a(href='/user/login') login
+            else
+                h4.pull-right 
+                     if user.type == "User"
+                        p(style="display: inline;") Hey, 
+                     else
+                        p(style="display: inline;") Hey, Admin 
+                     a(href='/profile/') #{user.displayName}
+                        img.img-thumbnail(width=50, height=50, src=user.img, style="margin-left: 10px; margin-right: 10px")
+                     a(href='/user/logout/') Logout
+            h3.text-muted 
+                a(href="/") Profiles
+
+
+
 block header
   nav.navbar.navbar-inverse.navbar-fixed-top
       .container
@@ -29,32 +60,3 @@ block header
               //a(href='#about') About
             //li
               //a(href='#contact') Contact
-
-<!--
-block header
-
-    .container
-          .header.clearfix
-            //
-              <nav>
-              <ul class="nav nav-pills pull-right">
-              <li role="presentation" class="active"><a href="#">Home</a></li>
-              <li role="presentation"><a href="#">About</a></li>
-              <li role="presentation"><a href="#">Contact</a></li>
-              </ul>
-              </nav>
-            if user == null
-                h4.pull-right Please 
-                    a(href='/user/login') login
-            else
-                h4.pull-right 
-                     if user.type == "User"
-                        p(style="display: inline;") Hey, 
-                     else
-                        p(style="display: inline;") Hey, Admin 
-                     a(href='/profile/') #{user.displayName}
-                        img.img-thumbnail(width=50, height=50, src=user.img, style="margin-left: 10px; margin-right: 10px")
-                     a(href='/user/logout/') Logout
-            h3.text-muted 
-                a(href="/") Profiles
--->
