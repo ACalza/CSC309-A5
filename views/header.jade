@@ -1,0 +1,62 @@
+extends layout
+
+
+
+
+block header
+
+    .container
+          .header.clearfix
+            //
+              <nav>
+              <ul class="nav nav-pills pull-right">
+              <li role="presentation" class="active"><a href="#">Home</a></li>
+              <li role="presentation"><a href="#">About</a></li>
+              <li role="presentation"><a href="#">Contact</a></li>
+              </ul>
+              </nav>
+            if user == null
+                h4.pull-right Please 
+                    a(href='/user/login') login
+            else
+                h4.pull-right 
+                     if user.type == "User"
+                        p(style="display: inline;") Hey, 
+                     else
+                        p(style="display: inline;") Hey, Admin 
+                     a(href='/profile/') #{user.displayName}
+                        img.img-thumbnail(width=50, height=50, src=user.img, style="margin-left: 10px; margin-right: 10px")
+                     a(href='/user/logout/') Logout
+            h3.text-muted 
+                a(href="/") Profiles
+
+
+
+block header
+  nav.navbar.navbar-inverse.navbar-fixed-top
+      .container
+        .navbar-header
+          button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar', aria-expanded='false', aria-controls='navbar')
+            span.sr-only Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          if auth_user
+            a.navbar-brand(href='/users/') S & S
+          else
+            a.navbar-brand(href='/') S & S
+        #navbar.collapse.navbar-collapse
+          ul.nav.navbar-nav
+            li.active
+              a(href='/') Home
+            if auth_user
+                li.active
+                    a(href='/users/user/' + auth_user._id)=auth_user.name
+                li.active
+                    a(href='/users/logOut') Log Out
+                li.active
+                    a(href='/users/') User List
+            //li
+              //a(href='#about') About
+            //li
+              //a(href='#contact') Contact

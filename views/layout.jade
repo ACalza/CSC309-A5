@@ -13,34 +13,11 @@ html(lang='en')
     // Custom styles for this template
     link(href='/stylesheets/jumbotron-narrow.css', rel='stylesheet')
     link(href='/stylesheets/style.css', rel='stylesheet')
+    block extraHeader
     script(src='http://code.jquery.com/jquery-1.11.3.min.js')
     script(src='/javascripts/bootstrap.js')
   body
-    .container
-      .header.clearfix
-        //
-          <nav>
-          <ul class="nav nav-pills pull-right">
-          <li role="presentation" class="active"><a href="#">Home</a></li>
-          <li role="presentation"><a href="#">About</a></li>
-          <li role="presentation"><a href="#">Contact</a></li>
-          </ul>
-          </nav>
-        if user == null
-            h4.pull-right Please 
-                a(href='/auth/local/login') login
-        else
-            h4.pull-right 
-                 if user.type == "User"
-                    p(style="display: inline;") Hey, 
-                 else
-                    p(style="display: inline;") Hey, Admin 
-                 a(href='/profile/') #{user.displayName}
-                    img.img-thumbnail(width=50, height=50, src=user.img, style="margin-left: 10px; margin-right: 10px")
-                 a(href='/user/logout/') Logout
-        h3.text-muted 
-            a(href="/") Profiles
-
-      block content
-      footer.footer
-        p © Roman Polyanovsky 2015
+    block header   
+    block content
+    //footer.footer
+    

@@ -24,6 +24,22 @@ router.get('/', function (req, res, next) {
     }
 });
 
+//NOTE: THIS IS FOR TESTING TEMPLATE ONLY. TY
+router.get('/userlist', function (req, res, next) {
+    if (req.session.curUser) {
+
+        //List all users
+        models.User.find({}, function (err, users) {
+            res.render('userlist', {
+                user: req.session.curUser,
+                allUsers: users
+            });
+        });
+    } else {
+        res.render('userlist');
+    }
+});
+
 //All routes to be exported and added here
 module.exports = {
     "auth": auth,
