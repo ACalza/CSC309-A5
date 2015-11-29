@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  if errorMsg
+    div.alert.alert-danger(role='alert')= errorMsg
+  span Note: We do not store your Minecraft password. Trust.
+  form(role='form', action='/auth/minecraft/login' method='post')
+      .form-group
+        label(for='email') Mojang Email or Username:
+        input#email.form-control(type='email', name='email', required='required')
+      .form-group
+        label(for='pwd') Password:
+        input#pwd.form-control(type='password', name='password', required='required')
+      button.btn.btn-default(type='submit') Login

@@ -8,6 +8,11 @@ var userSchema = mongoose.Schema({
     type: String,
     img: String,
     description: String,
+    accountSource: String,
+    accessTokens: {
+        Minecraft: String,
+        Google: String
+    },
     pages: [String],
     pageVisits: [Number],
     loginIPs: [String],
