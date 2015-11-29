@@ -4,10 +4,12 @@ var router = express.Router();
 var models = require("../models/index");
 var util = require('../util');
 var googleAuth = require('../auth/google');
+var localAuth = require('../auth/local');
 var uaparse = require('ua-parser-js');
 
 
 googleAuth(router, googleAuthComplete);
+localAuth(router, authComplete);
 
 function authComplete(user, req, res, next) {
     if (!req.session.curUser)
@@ -64,6 +66,7 @@ function updateUserAnalytics(user, req) {
 
     var devString = (device.type ? device.type : "Desktop") + "/" + (device.vendor ? device.vendor : ua.os.name + " " + ua.os.version) + "/" + (device.vendor ? device.vendor : (device.model ? device.model : "Unknown Model"));
     user.loginDevices.push(devString);
+    user.loginLocations.push('Unknown');
     //user.loginLocations.push(loc); //FIXME: Pull this out of somewhere else
     return user;
 }

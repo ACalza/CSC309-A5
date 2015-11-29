@@ -5,64 +5,6 @@ var util = require('../util');
 var uaparse = require('ua-parser-js');
 var models = require("../models/index");
 
-/* GET login */
-router.get('/login', function (req, res, next) {
-    //Logged in users can't access
-    if (req.session.curUser != null) {
-        res.redirect('/profile');
-        return;
-    }
-    res.render('login');
-});
-
-/* POST Login */
-router.post('/login', function (req, res, next) {
-    //Logged in users can't access
-    if (req.session.curUser != null) {
-        res.redirect('/profile');
-        return;
-    }
-    var email = req.body.email;
-    var pass = req.body.password;
-    var loc = req.body.location;
-    pass = util.md5hash(pass);
-    models.User.findOne({
-        email: email,
-        password: pass
-    }, function (err, user) {
-        if (user) {
-            //Match - set session user to matched
-
-            //Log login analytics
-            user.loginDates.push(new Date().toDateString())
-            user.loginIPs.push(req.ip);
-
-            var ua = uaparse(req.headers['user-agent']);
-            var device = ua.device;
-
-            var devString = (device.type ? device.type : "Desktop") + "/" + (device.vendor ? device.vendor : ua.os.name + " " + ua.os.version) + "/" + (device.vendor ? device.vendor : (device.model ? device.model : "Unknown Model"));
-            user.loginDevices.push(devString);
-            user.loginLocations.push(loc);
-            util.saveModel(user, function (err) {
-                res.status(500);
-                res.render('error', {
-                    error: err,
-                    message: "Database Error"
-                });
-            }, function (user) {
-                req.session.curUser = user;
-                res.redirect("/profile/");
-            });
-        } else {
-            //No match - wrong email or password
-            res.render('login', {
-                errorMsg: "Sorry, wrong email/password."
-            });
-        }
-
-    });
-});
-
 /* GET register */
 router.get('/register', function (req, res, next) {
     if (req.session.curUser != null) {
