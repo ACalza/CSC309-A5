@@ -15,28 +15,27 @@ router.post('/', function (req, res, next) {
         } else {
             get_ServerInfo(req.body.ip, req.body.port, function (err, result) {
                 if !(err) {
-                    create_server(result.ip, result.title, result.gameMode, result.gameId, result.version, result.plugins, result.map,
-                        result.numPlayersOnline, result.maxPlayers, result.fromIP, result.port, result.onlinePlayers);
+                    create_server(result);
                 }
             });
         }
     })
 });
 
-function create_server(ip, title, gameMode, gameId, version, plugins, map, numPlayersOnline, maxPlayers, fromIP, port, onlinePlayers) {
+function create_server(server) {
     var newServer = new serverDb({
-        ip: ip,
-        title: title,
-        gameMode: gameMode,
-        gameId: GameId,
-        version: version,
-        plugins: plugins,
-        map: map,
-        numPlayersOnline: numPlayersOnline,
-        maxPlayers: maxPlayers,
-        fromIP: fromIP,
-        port: port,
-        onlineplayers: onlineplayers
+        ip: server.ip,
+        title: server.title,
+        gameMode: server.gameMode,
+        gameId: server.GameId,
+        version: server.version,
+        plugins: server.plugins,
+        map: server.map,
+        numPlayersOnline: server.numPlayersOnline,
+        maxPlayers: server.maxPlayers,
+        fromIP: server.fromIP,
+        port: server.port,
+        onlineplayers: server.onlineplayers
     });
     newServer.save(function (err, newServer) {
         if (err) {
