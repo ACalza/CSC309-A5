@@ -1,5 +1,9 @@
 extends header
 
+block append extraHeader
+    link(href='/stylesheets/sortable-theme-minimal.css', rel='stylesheet')
+    script(src='/javascripts/sortable.min.js')
+
 block content
   .jumbotron
     if user
@@ -7,11 +11,11 @@ block content
             h2 Welcome, #{user.displayName}
         else
             h2 Welcome, Administrator #{user.displayName}
-        table.table.table-striped
+        table.table.table-striped(data-sortable='')
             thead
               tr
-                th(style='text-align: center') Display Name
-                th(style='text-align: center') Email
+                th Display Name
+                th Email
             tbody
                 mixin user(display, email, id)
                     tr

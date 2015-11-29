@@ -5,6 +5,23 @@ var util = require('../util');
 var uaparse = require('ua-parser-js');
 var models = require("../models/index");
 
+//NOTE: THIS IS FOR TESTING TEMPLATE ONLY. TY
+router.get('/userlist', function (req, res, next) {
+    if (req.session.curUser) {
+
+        //List all users
+        models.User.find({}, function (err, users) {
+            res.render('users', {
+                user: req.session.curUser,
+                allUsers: users
+            });
+        });
+    } else {
+        res.render('users');
+    }
+});
+
+
 /* GET register */
 router.get('/register', function (req, res, next) {
     if (req.session.curUser != null) {
