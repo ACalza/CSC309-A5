@@ -16,7 +16,7 @@ block content
   if errorMsg
     div.alert.alert-danger(role='alert')= errorMsg
 
-  form(role='form', action='/user/login' method='post')
+  form(role='form', action='/auth/user/login' method='post')
       .form-group
         label(for='email') Email:
         input#email.form-control(type='email', name='email', required='required')
@@ -25,3 +25,5 @@ block content
         input#pwd.form-control(type='password', name='password', required='required')
       input#location(type='hidden', name='location', value='Denied')
       button.btn.btn-default(type='submit') Login
+  br
+  a.btn.btn-info(href='/auth/google/login', role='button') Login with Google

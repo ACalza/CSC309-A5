@@ -28,7 +28,7 @@ html(lang='en')
           </nav>
         if user == null
             h4.pull-right Please 
-                a(href='/user/login') login
+                a(href='/auth/local/login') login
         else
             h4.pull-right 
                  if user.type == "User"
