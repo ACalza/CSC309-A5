@@ -1,0 +1,26 @@
+extends header
+
+block append extraHeader
+    link(href='/stylesheets/sortable-theme-minimal.css', rel='stylesheet')
+    script(src='/javascripts/sortable.min.js')
+        
+//NOTE: ACTUAL CONTENTS WILL CHANGE.
+block content
+    .container
+        //This is reserved for important stuff, like search bar and filters
+        p Search parameters
+    .container
+        table.table(data-sortable='')
+            thead
+                tr
+                    th Name
+                    th Number
+            tbody
+                tr
+                    td Example
+                    td 1
+                tr
+                    td Second
+                    td 2
+    
+        
