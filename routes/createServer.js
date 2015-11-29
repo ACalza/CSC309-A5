@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var serverDb = require('../serverDb');
+var serverDb = require('./mineCraftServer');
 
 //create server
 router.post('/', function (req, res, next) {
@@ -16,7 +16,7 @@ router.post('/', function (req, res, next) {
                 var serverJSON = get_ServerInfo(req.body.serverIP, req.body.portnum);
                 //we need the get_ServerInfo function that returns the JSON object
                 var newuser = new serverDb({
-                    serverIP: req.body.serverIP,
+                    ip: req.body.serverIP,
                     domain: serverJSON.domain,
                     port: req.body.portnum,
                     url: serverJSON.url,
