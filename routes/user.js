@@ -21,6 +21,67 @@ router.get('/userlist', function (req, res, next) {
     }
 });
 
+//NOTE: THIS IS FOR TESTING TEMPLATE ONLY.
+//REMOVE ONCE YOU HAVE A REAL ROUTE TY
+router.get('/serverlist', function (req, res, next) {
+    if (req.session.curUser) {
+
+        //List all users
+        models.User.find({}, function (err, users) {
+            res.render('servers', {
+                user: req.session.curUser,
+                allUsers: users,
+                servers: [
+                    {
+                        ip: "192.2.1.1",
+                        title: "Test",
+                        gameMode: "Normal",
+                        gameId: 1,
+                        version: 1,
+                        plugins: 1,
+                        map: "de_dust2",
+                        numPlayersOnline: 10,
+                        maxPlayers: 10,
+                        fromIP: 12,
+                        port: 27000,
+                        onlineplayers: [String]
+                    },
+                    {
+                        ip: "194.2.1.1",
+                        title: "BestServNA",
+                        gameMode: "Abnormal",
+                        gameId: 1,
+                        version: 1,
+                        plugins: 1,
+                        map: "de_aztec",
+                        numPlayersOnline: 5,
+                        maxPlayers: 10,
+                        fromIP: 12,
+                        port: 27050,
+                        onlineplayers: [String]
+                    },
+                    {
+                        ip: "127.0.0.1",
+                        title: "YOLOSWAG",
+                        gameMode: "SWAGMODE",
+                        gameId: 1,
+                        version: 1,
+                        plugins: 1,
+                        map: "de_swag",
+                        numPlayersOnline: 0,
+                        maxPlayers: 64,
+                        fromIP: 12,
+                        port: 666,
+                        onlineplayers: [String]
+                    }
+                ]
+            });
+        });
+    } else {
+        res.render('index');
+    }
+});
+
 
 /* GET register */
 router.get('/register', function (req, res, next) {
