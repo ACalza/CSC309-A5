@@ -6,7 +6,7 @@ var mongoose = require('mongoose');
 var mineCraftServer = mongoose.Schema({
     ip: String,
     title: String,
-    gameMode: Number,
+    gameMode: String,
     gameId: Number,
     version: String,
     plugins: String,
