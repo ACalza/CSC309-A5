@@ -4,11 +4,12 @@ block append extraHeader
     link(href='/stylesheets/sortable-theme-minimal.css', rel='stylesheet')
     script(src='/javascripts/sortable.min.js')
         
-mixin server(name, title, map, curr_players, max_players, ip, port)
+mixin server(name, title, map, gameMode, curr_players, max_players, ip, port)
     tr
         td=name
         td=title
         td=map
+        td=gameMode
         td(data-value=curr_players)=curr_players + '/' + max_players
         td=ip + ":" + port
 
@@ -24,10 +25,11 @@ block content
                     th Name
                     th Title
                     th Map
+                    th Game Mode
                     th Players
                     th IP:Port                   
             tbody
                 each server in servers
-                    +server(server.name, server.title, server.map, server.numPlayersOnline, server.maxPlayers, server.ip, server.port)
+                    +server(server.name, server.title, server.gameMode, server.map, server.numPlayersOnline, server.maxPlayers, server.ip, server.port)
     
         
