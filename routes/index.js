@@ -3,8 +3,10 @@ var auth = require("./auth");
 var analytics = require("./analytics");
 var profile = require("./profile");
 var user = require("./user");
+var createServer = require("./createServer")
 var express = require("express");
 var models = require("../models/index");
+
 var router = express.Router();
 
 
@@ -29,6 +31,7 @@ module.exports = {
     "auth": auth,
     "analytics": analytics,
     "profile": profile,
+    "createServer": createServer,
     "user": user,
     "/": router
 }

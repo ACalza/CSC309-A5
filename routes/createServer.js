@@ -1,23 +1,32 @@
 var express = require('express');
 var router = express.Router();
-var serverDb = require('./mineCraftServer');
-
+var serverDb = require('../models/index').MineCraftServer;
+var Query = require("mcquery");
+var mcData = require("minecraft-data")
+var stats = null;
 //create server
-router.post('/', function (req, res, next) {
-
+router.post('/createServer', function(req, res) {
     serverDb.count({
         ip: req.body.ip
-    }, function (err, result) {
+    }, function(err, result) {
+        if (err) {
+            console.error(err);
+            return res.send("500 Internal Server Error");
+        }
         if (result != 0) {
             res.render('createServer', {
                 error: 'This server is already registered'
             });
         } else {
-            get_ServerInfo(req.body.ip, req.body.port, function (err, result) {
-                if !(err) {
-                    create_server(result);
+            var query = new Query(req.body.ip, req.body.port);
+            query.connect(function(err) {
+                if (err) {
+                    console.error(err);
+                } else {
+                    query.full_stat(fullStat);
+
                 }
-            });
+            })
         }
     })
 });
@@ -27,42 +36,37 @@ function create_server(server) {
         ip: server.ip,
         title: server.title,
         gameMode: server.gameMode,
-        gameId: server.GameId,
         version: server.version,
-        plugins: server.plugins,
         map: server.map,
-        numPlayersOnline: server.numPlayersOnline,
         maxPlayers: server.maxPlayers,
-        fromIP: server.fromIP,
-        port: server.port,
-        onlineplayers: server.onlineplayers
+        port: server.port
     });
-    newServer.save(function (err, newServer) {
+    newServer.save(function(err, newServer) {
         if (err) {
             console.error(err);
+        }else{
+            console.log(newServer);
         }
     });
 }
 
-function get_ServerInfo(ip, port, callback) {
-    //Do fancy stuff here...
-
-    var result = {
-        ip: "!",
-        title: "1",
-        gameMode: 1,
-        gameId: 1,
-        version: "1",
-        plugins: "1",
-        map: "1",
-        numPlayersOnline: 1,
-        maxPlayers: 1,
-        fromIP: "!",
-        port: 1,
-        onlineplayers: ["1"]
+function fullStat(err, stat) {
+    if (err)//Error handle to be cleaned up in a bit
+        return console.error(err);
+    else {
+        var server = {
+            ip: stat.from.address,
+            port: stat.from.port,
+            title: stat.hostname,
+            gameMode: stat.gametype,
+            version: stat.version,
+            map: stat.map,
+            maxPlayers: stat.maxplayers
+        }
+        create_server(server);
     }
-
-    callback(false, result);
 }
+
+
 
 module.exports = router;

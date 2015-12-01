@@ -80,11 +80,22 @@ app.use(function (req, res, next) {
 
 //Build all routes
 for(route in routes){
-    app.use('/' + route, routes[route]);
+    //temporary
+    if(route == "createServer")
+        continue
+    if(route !== "/"){
+        console.log("creating route /" + route);
+        app.use("/" + route, routes[route]);
+    }else{
+        console.log("creating route /");
+        app.use(route, routes[route]);
+    }
 }
+console.log("creating route /createServer");
+app.post('/createServer', routes["createServer"]);
 
-
-// catch 404 and forward to error handler
+//Errors temporarily gone
+//catch 404 and forward to error handler
 app.use(function (req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
