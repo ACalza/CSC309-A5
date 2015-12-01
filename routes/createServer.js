@@ -21,9 +21,28 @@ router.post('/createServer', function(req, res) {
             var query = new Query(req.body.ip, req.body.port);
             query.connect(function(err) {
                 if (err) {
-                    console.error(err);
+                    res.status(400);
+                    res.render('error', {
+                        message: "400 Bad Request",
+                        error: err
+                    });
                 } else {
-                    query.full_stat(fullStat);
+                    query.full_stat(function(err, stat){
+                        if (err)//Error handle to be cleaned up in a bit
+                            return console.error(err);
+                        else {
+                            var server = {
+                                ip: stat.from.address,
+                                port: stat.from.port,
+                                title: stat.hostname,
+                                gameMode: stat.gametype,
+                                version: stat.version,
+                                map: stat.map,
+                                maxPlayers: stat.maxplayers
+                            }
+                            create_server(req, res, server);
+                        }
+                    });
 
                 }
             })
@@ -31,7 +50,7 @@ router.post('/createServer', function(req, res) {
     })
 });
 
-function create_server(server) {
+function create_server(req, res, server) {
     var newServer = new serverDb({
         ip: server.ip,
         title: server.title,
@@ -43,28 +62,20 @@ function create_server(server) {
     });
     newServer.save(function(err, newServer) {
         if (err) {
-            console.error(err);
+            res.status(500);
+            res.render('error', {
+                message: "Database error",
+                error: err
+            });
         }else{
             console.log(newServer);
+            res.send("SAVED!");
         }
     });
 }
 
 function fullStat(err, stat) {
-    if (err)//Error handle to be cleaned up in a bit
-        return console.error(err);
-    else {
-        var server = {
-            ip: stat.from.address,
-            port: stat.from.port,
-            title: stat.hostname,
-            gameMode: stat.gametype,
-            version: stat.version,
-            map: stat.map,
-            maxPlayers: stat.maxplayers
-        }
-        create_server(server);
-    }
+
 }
 
 
