@@ -2,7 +2,9 @@ extends header
 
 block append extraHeader
     link(href='/stylesheets/sortable-theme-minimal.css', rel='stylesheet')
-    script(src='/javascripts/sortable.min.js')
+    link(href='https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css', rel='stylesheet')
+    //script(src='/javascripts/sortable.min.js')
+    script(src='https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js')
         
 mixin server( title, map, gameMode, curr_players, max_players, ip, port)
     tr
@@ -18,7 +20,7 @@ block content
         //This is reserved for important stuff, like search bar and filters
         p Search parameters
     .container
-        table.table(data-sortable='')
+        table#myTable.table.display
             thead
                 tr
                     th Title
@@ -30,4 +32,7 @@ block content
                 each server in servers
                     +server(server.title, server.gameMode, server.map, server.numPlayersOnline, server.maxPlayers, server.ip, server.port)
     
-        
+    script(type='text/javascript').
+        $(document).ready(function(){
+        $('#myTable').DataTable();
+        });
