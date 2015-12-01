@@ -2,7 +2,9 @@ extends header
 
 block append extraHeader
     link(href='/stylesheets/sortable-theme-minimal.css', rel='stylesheet')
-    script(src='/javascripts/sortable.min.js')
+    link(href='https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css', rel='stylesheet')
+    //script(src='/javascripts/sortable.min.js')
+    script(src='https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js')
         
 mixin server( title, map, gameMode, curr_players, max_players, ip, port)
     tr
@@ -18,16 +20,45 @@ block content
         //This is reserved for important stuff, like search bar and filters
         p Search parameters
     .container
-        table.table(data-sortable='')
+        table#myTable.table.display
             thead
                 tr
                     th Title
                     th Map
                     th Game Mode
                     th Players
-                    th IP:Port                   
+                    th IP:Port 
+            tfoot
+                tr
+                    th Title
+                    th Map
+                    th Game Mode
+                    th Players
+                    th IP:Port 
             tbody
                 each server in servers
-                    +server(server.title, server.gameMode, server.map, server.numPlayersOnline, server.maxPlayers, server.ip, server.port)
+                    +server(server.title, server.map, server.gameMode, server.numPlayersOnline, server.maxPlayers, server.ip, server.port)
     
+    
+    script(type='text/javascript').
+        $(document).ready(function(){
+        $('#myTable tfoot th').each( function () {
+        var title = $(this).text();
+        $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+        } );  
         
+        var table = $('#myTable').DataTable();
+        
+        // Apply the search
+        table.columns().every( function () {
+            var that = this;
+
+            $( 'input', this.footer() ).on( 'keyup change', function () {
+                if ( that.search() !== this.value ) {
+                    that
+                        .search( this.value )
+                        .draw();
+                }
+            } );
+        } );
+        });
