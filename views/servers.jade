@@ -39,12 +39,6 @@ block content
                 each server in servers
                     +server(server.title, server.map, server.gameMode, server.numPlayersOnline, server.maxPlayers, server.ip, server.port)
     
-    style(type='/test/stylesheet').
-        tfoot input {
-        width: 100%;
-        padding: 3px;
-        box-sizing: border-box;
-        }
     
     script(type='text/javascript').
         $(document).ready(function(){
