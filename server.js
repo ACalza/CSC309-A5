@@ -13,9 +13,9 @@ var mongoose = require("mongoose");
 /**
  * Connect to mongoose server
  */
-mongoose.connect('mongodb://localhost/a5', {
-    user: '',
-    pass: ''
+mongoose.connect('mongodb://ourgroup:password@ds061464.mongolab.com:61464/csc309', {
+    user: 'ourgroup',
+    pass: 'password'
 });
 
 /**
