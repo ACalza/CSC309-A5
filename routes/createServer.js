@@ -5,10 +5,11 @@ var Query = require("mcquery");
 var mcData = require("minecraft-data")
 var stats = null;
 //create server
-router.post('/createServer', function(req, res) {
+router.post('/createServer', function (req, res) {
     serverDb.count({
-        ip: req.body.ip
-    }, function(err, result) {
+        ip: req.body.ip,
+        port: req.body.port
+    }, function (err, result) {
         if (err) {
             console.error(err);
             return res.send("500 Internal Server Error");
@@ -19,7 +20,7 @@ router.post('/createServer', function(req, res) {
             });
         } else {
             var query = new Query(req.body.ip, req.body.port);
-            query.connect(function(err) {
+            query.connect(function (err) {
                 if (err) {
                     res.status(400);
                     res.render('error', {
@@ -27,8 +28,8 @@ router.post('/createServer', function(req, res) {
                         error: err
                     });
                 } else {
-                    query.full_stat(function(err, stat){
-                        if (err)//Error handle to be cleaned up in a bit
+                    query.full_stat(function (err, stat) {
+                        if (err) //Error handle to be cleaned up in a bit
                             return console.error(err);
                         else {
                             var server = {
@@ -60,14 +61,14 @@ function create_server(req, res, server) {
         maxPlayers: server.maxPlayers,
         port: server.port
     });
-    newServer.save(function(err, newServer) {
+    newServer.save(function (err, newServer) {
         if (err) {
             res.status(500);
             res.render('error', {
                 message: "Database error",
                 error: err
             });
-        }else{
+        } else {
             console.log(newServer);
             res.send("SAVED!");
         }
