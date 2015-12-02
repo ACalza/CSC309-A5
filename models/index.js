@@ -1,5 +1,5 @@
-var MineCraftServer = require("./MineCraftServer");
-var User = require("./User");
+var MineCraftServer = require("./mineCraftServer");
+var User = require("./user");
 
 module.exports = {
     MineCraftServer: MineCraftServer,
