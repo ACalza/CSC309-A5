@@ -1,0 +1,15 @@
+Testing plan:
+
+Test every page
+	- Login
+		- Login with various accounts (Minecraft and Google)
+		- Google - deny permission
+	- Add server
+		- Long names
+		- Blank names
+		- Invalid IPs [U]
+		- Unqueryable IPs [U]
+	- Server page
+		- Comment persistance
+		- Rating persistance
+		

@@ -15,7 +15,8 @@ var mineCraftServer = mongoose.Schema({
     maxPlayers: Number,
     fromIP: String,
     port: Number,
-    onlineplayers: [String]
+    onlineplayers: [String],
+    playerHistory: [String]
 });
 
 module.exports = mongoose.model('MineCraftServer', mineCraftServer);
