@@ -4,8 +4,8 @@ var serverDb = require('../models/index').MineCraftServer;
 var Query = require("mcquery");
 var mcData = require("minecraft-data");
 
-router.get('/getAllServers', function (req, res, next) {
-    db.find({}, function (err, result) {
+router.get('/', function (req, res, next) {
+    serverDb.find({}, function (err, result) {
         if (err) {
             console.error(err);
             return res.send("500 Internal Server Error");

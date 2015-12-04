@@ -80,9 +80,6 @@ app.use(function (req, res, next) {
 
 //Build all routes
 for(route in routes){
-    //temporary
-    if(route == "createServer")
-        continue
     if(route !== "/"){
         console.log("creating route /" + route);
         app.use("/" + route, routes[route]);
@@ -91,8 +88,6 @@ for(route in routes){
         app.use(route, routes[route]);
     }
 }
-console.log("creating route /createServer");
-app.post('/createServer', routes["createServer"]);
 
 //Errors temporarily gone
 //catch 404 and forward to error handler

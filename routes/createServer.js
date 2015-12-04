@@ -5,7 +5,8 @@ var serverQuery = require("../lib/server-updater.js");
 var mcData = require("minecraft-data")
 var stats = null;
 //create server
-router.post('/createServer', function (req, res) {
+router.post('/', function(req, res) {
+
     serverDb.count({
         ip: req.body.ip,
         port: req.body.port
