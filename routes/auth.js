@@ -47,9 +47,13 @@ function thirdPartyAuthComplete(email, displayName, picture, access_token, auth_
             if (user) {
                 u = user;
                 //Already have a user in our database with this username, update
-                u.displayName = displayName;
-                u.email = email;
-                u.img = picture;
+                if (auth_service == "Minecraft" || auth_service == u.accountSource) {
+                    u.displayName = displayName;
+                    u.email = email;
+                    u.img = picture;
+                    u.accountSource = auth_service;
+                }
+
                 if (access_token) {
                     u.accessTokens[auth_service] = access_token;
                 }
