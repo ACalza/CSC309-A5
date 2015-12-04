@@ -79,17 +79,47 @@ router.get('/list', function (req, res, next) {
     });
 });
 
+router.get('/comment/list/:server_id', function (req, res, next) {
+    if (!req.params.server_id || !req.body.text) {
+        res.json({
+            error: "Server id empty"
+        });
+        return;
+    }
+    serverDb.findOne({
+        _id: req.params.server_id //TODO: Invalid server_id might cause crash if not proper format
+    }, function (err, server) {
+        if (err) {
+            res.json({
+                error: "Database error - " + err
+            });
+        } else if (server == 0) {
+            res.json({
+                error: "Server id not found"
+            });
+        } else {
+            Comment.find({
+                server: server._id
+            }, function (err, comments) {
+                res.json(comments);
+            });
+        }
+    });
+});
+
 //TODO: Move to router?
 router.post('/comment/add/:server_id', function (req, res, next) {
     if (!req.session.curUser) {
         res.json({
             error: "Not logged in"
         });
+        return;
     }
     if (!req.params.server_id || !req.body.text) {
         res.json({
             error: "Server or text empty"
         });
+        return;
     }
     serverDb.findOne({
         _id: req.params.server_id //TODO: Invalid server_id might cause crash if not proper format
@@ -108,6 +138,15 @@ router.post('/comment/add/:server_id', function (req, res, next) {
                 server: server._id,
                 text: req.body.text,
                 verified: req.session.curUser.accountSource == "Minecraft" && server.playerHistory.indexOf(req.session.curUser.displayName) >= 0
+            });
+            comment.save(function (err) {
+                if (err) {
+                    res.json({
+                        error: "Server id not found"
+                    });
+                } else {
+                    res.send("OK");
+                }
             });
         }
     });
