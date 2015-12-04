@@ -21,6 +21,12 @@ var util = {
             var Model;
             if (modelName == "User") {
                 Model = models.User;
+            } else if (modelName == "mineCraftServer") {
+                Model = models.MineCraftServer;
+            } else if (modelName == "Comment") {
+                Model = models.Comment;
+            } else {
+                console.error("Unknown model - " + modelName);
             }
 
             Model.findOne({
