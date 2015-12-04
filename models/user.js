@@ -1,5 +1,4 @@
 var mongoose = require('mongoose');
-var mineCraftServer = require('mineCraftServer');
 
 //Create and compile schema
 var userSchema = mongoose.Schema({
