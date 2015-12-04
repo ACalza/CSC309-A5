@@ -1,0 +1,51 @@
+extends header
+
+block append extraHeader
+    link(href='/stylesheets/server.css', rel='stylesheet')
+    
+block content
+    .container-fluid
+      .row
+        //.col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
+      h1.page-header=server.title + ' (' + server.ip + ':' + server.port + ')'
+      .row.placeholders
+        .col-xs-6.col-sm-3.placeholder
+          img.img-responsive(data-src='holder.js/200x200/auto/sky', alt='Generic placeholder thumbnail')
+          h4 Label
+          span.text-muted Something else
+        .col-xs-6.col-sm-3.placeholder
+          img.img-responsive(data-src='holder.js/200x200/auto/vine', alt='Generic placeholder thumbnail')
+          h4 Label
+          span.text-muted Something else
+        .col-xs-6.col-sm-3.placeholder
+          img.img-responsive(data-src='holder.js/200x200/auto/sky', alt='Generic placeholder thumbnail')
+          h4 Label
+          span.text-muted Something else
+        .col-xs-6.col-sm-3.placeholder
+          img.img-responsive(data-src='holder.js/200x200/auto/vine', alt='Generic placeholder thumbnail')
+          h4 Label
+          span.text-muted Something else
+      h2.sub-header Players Online
+      .table-responsive
+        table.table.table-striped
+          thead
+            tr
+              th Name
+          tbody
+            each player in server.onlineplayers
+                tr
+                    th=player
+                    
+      h2.sub-header Players History
+      .table-responsive
+        table.table.table-striped
+          thead
+            tr
+              th Name
+              th Last Online
+          tbody
+            each player in server.playerHistory
+                tr
+                    th=player.name
+                    th=player.lastOnline
+            
