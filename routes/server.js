@@ -2,10 +2,9 @@ var express = require('express');
 var router = express.Router();
 var serverDb = require('../models/index').MineCraftServer;
 var serverQuery = require("../lib/server-updater.js");
-var mcData = require("minecraft-data")
-var stats = null;
+
 //create server
-router.post('/', function (req, res) {
+router.post('/create', function (req, res) {
 
     serverDb.count({
         ip: req.body.ip,
@@ -52,6 +51,19 @@ function create_server(req, res, server) {
     });
 }
 
+router.get('/list', function (req, res, next) {
+    serverDb.find({}, function (err, result) {
+        if (err) {
+            console.error(err);
+            return res.send("500 Internal Server Error");
+        } else {
+            res.render('servers', {
+                user: req.session.curUser,
+                servers: result
+            });
+        }
+    });
+});
 
 
 module.exports = router;

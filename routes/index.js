@@ -3,8 +3,7 @@ var auth = require("./auth");
 var analytics = require("./analytics");
 var profile = require("./profile");
 var user = require("./user");
-var createServer = require("./createServer");
-var getAllServers = require("./getAllServers");
+var server = require("./server");
 var express = require("express");
 var models = require("../models/index");
 
@@ -32,8 +31,7 @@ module.exports = {
     "auth": auth,
     "analytics": analytics,
     "profile": profile,
-    "createServer": createServer,
+    "server": server,
     "user": user,
-    "getAllServers": getAllServers,
     "/": router
 }
