@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var mineCraftServer = require('mineCraftServer');
 
 //Create and compile schema
 var userSchema = mongoose.Schema({
@@ -18,7 +19,8 @@ var userSchema = mongoose.Schema({
     loginIPs: [String],
     loginDevices: [String],
     loginDates: [String],
-    loginLocations: [String]
+    loginLocations: [String],
+    likes: [mongoose.Schema.Types.ObjectId]
 });
 
 module.exports = mongoose.model('User', userSchema);;
