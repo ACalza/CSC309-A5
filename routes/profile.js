@@ -85,6 +85,14 @@ router.get('/edit/:id/:command?', function (req, res, next) {
                 res.render("error", {
                     message: "User not found"
                 });
+            } else if (user.accountSource != "Local") {
+                res.render('profile', {
+                    edit: false,
+                    profUser: user,
+                    user: req.session.curUser,
+                    errorMsg: "You can't edit the details of your " + user.accountSource + " account here."
+                });
+
             } else {
                 //Show editable version.
                 //View will take care of allowing password changes (but we double check in the post function JIC)
@@ -107,6 +115,7 @@ router.get('/edit/:id/:command?', function (req, res, next) {
 
 });
 
+//TODO: Disable editing on non local accounts.
 /* POST profile edit page */
 router.post('/edit/:id/:command?', function (req, res, next) {
     if (req.session.curUser == null) {
@@ -133,6 +142,13 @@ router.post('/edit/:id/:command?', function (req, res, next) {
                     res.status(404);
                     res.render("error", {
                         message: "User not found"
+                    });
+                } else if (user.accountSource != "Local") {
+                    res.render('profile', {
+                        edit: false,
+                        profUser: user,
+                        user: req.session.curUser,
+                        errorMsg: "You can't edit the details of your " + user.accountSource + " account here."
                     });
                 } else {
                     // No display name? Set to email
