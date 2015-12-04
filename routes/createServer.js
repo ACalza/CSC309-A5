@@ -5,12 +5,13 @@ var serverQuery = require("../lib/server-updater.js");
 var mcData = require("minecraft-data")
 var stats = null;
 //create server
-router.post('/', function(req, res) {
+router.post('/', function (req, res) {
 
     serverDb.count({
         ip: req.body.ip,
         port: req.body.port
     }, function (err, result) {
+        console.log(req.body.ip + ":" + req.body.port + " = " + result);
         if (err) {
             console.error(err);
             return res.send("500 Internal Server Error");
@@ -26,7 +27,7 @@ router.post('/', function(req, res) {
                 port: req.body.port
             });
         }
-    })
+    });
 });
 
 
