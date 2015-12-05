@@ -7,7 +7,7 @@ var util = require('../util');
 /* GET profile page */
 router.get('/', function (req, res, next) {
     if (req.session.curUser == null) {
-        res.redirect('/user/login');
+        res.redirect('/auth/local/login');
         return;
     }
     // Current user's profile, get user from session
@@ -115,27 +115,26 @@ router.get('/edit/:id/:command?', function (req, res, next) {
 
 });
 
-router.get('/like/:server_id', function(req, res){
-    if(!req.session.curUser){
+router.get('/like/:server_id', function (req, res) {
+    if (!req.session.curUser) {
         return res.json({
             error: "Not logged in"
         });
     }
-    ServerDB.findById(req.params.server_id, function(err, result){
-        if(err){
+    ServerDB.findById(req.params.server_id, function (err, result) {
+        if (err) {
             res.status(503);
             res.json({
                 error: "Database error - " + err
             });
-        }
-        else if(!result){
+        } else if (!result) {
             res.json({
                 error: "Server ID not found"
             })
-        }else{
+        } else {
             req.session.curUser.likes.push(req.params.server_id);
-            req.session.curUser.save(function(err, user){
-                if(err){
+            req.session.curUser.save(function (err, user) {
+                if (err) {
                     res.status(503);
                     console.error(err);
                     return res.json({
@@ -149,9 +148,9 @@ router.get('/like/:server_id', function(req, res){
     })
 })
 
-router.use('/recomendations', function(req, res, next){
+router.use('/recomendations', function (req, res, next) {
     ServerDB.find({}, function (err, servers) {
-        if(err){
+        if (err) {
             res.status(503);
             console.error(err);
             return res.json({
@@ -162,14 +161,14 @@ router.use('/recomendations', function(req, res, next){
         next();
     })
 })
-router.post('/recomendations', function(req, res){
-    if(!req.session.curUser){
+router.post('/recomendations', function (req, res) {
+    if (!req.session.curUser) {
         return res.json({
             error: "Not logged in"
         })
     }
     var maxRecomendations = req.body.maxRecomendations
-    if(maxRecomendations){
+    if (maxRecomendations) {
         maxRecomendations = req.session.curUser.likes.length;
     }
     req.body.recomendations = [];
@@ -177,12 +176,13 @@ router.post('/recomendations', function(req, res){
     res.send(recomendations);
 
 })
-function recomendationRecursion(i, maxRecomendations){
-    if(curUser.likes.length === i || i === maxRecomendations){
+
+function recomendationRecursion(i, maxRecomendations) {
+    if (curUser.likes.length === i || i === maxRecomendations) {
         return;
-    }else{
-        ServerDB.findById(curUser.likes[i], function(err, server){
-            if(err){
+    } else {
+        ServerDB.findById(curUser.likes[i], function (err, server) {
+            if (err) {
                 res.status(503);
                 return res.json({
                     error: "Database error - " + err
