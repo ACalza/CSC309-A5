@@ -9,6 +9,7 @@ var app = require('./app');
 var debug = require('debug')('a4:server');
 var http = require('http');
 var mongoose = require("mongoose");
+var minecraftUpdater = require("./lib/server-updater")
 
 /**
  * Connect to mongoose server
@@ -38,6 +39,11 @@ var server = http.createServer(app);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
+
+//Update minecraft server info every 5 minutes
+setInterval(1000 * 60 * 5, function () {
+    minecraftUpdater.updateAllServers();
+});
 
 /**
  * Normalize a port into a number, string, or false.
@@ -72,16 +78,16 @@ function onError(error) {
 
     // handle specific listen errors with friendly messages
     switch (error.code) {
-    case 'EACCES':
-        console.error(bind + ' requires elevated privileges');
-        process.exit(1);
-        break;
-    case 'EADDRINUSE':
-        console.error(bind + ' is already in use');
-        process.exit(1);
-        break;
-    default:
-        throw error;
+        case 'EACCES':
+            console.error(bind + ' requires elevated privileges');
+            process.exit(1);
+            break;
+        case 'EADDRINUSE':
+            console.error(bind + ' is already in use');
+            process.exit(1);
+            break;
+        default:
+            throw error;
     }
 }
 
