@@ -33,5 +33,6 @@ module.exports = {
     "profile": profile,
     "server": server,
     "user": user,
+    "getServer": getServer,
     "/": router
 }

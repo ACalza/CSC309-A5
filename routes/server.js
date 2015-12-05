@@ -29,7 +29,6 @@ router.post('/create', function (req, res) {
                 error: 'This server is already registered'
             });
         } else {
-
             create_server(req, res, {
                 ip: req.body.ip,
                 port: req.body.port

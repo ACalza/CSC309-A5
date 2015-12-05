@@ -18,7 +18,8 @@ var userSchema = mongoose.Schema({
     loginIPs: [String],
     loginDevices: [String],
     loginDates: [String],
-    loginLocations: [String]
+    loginLocations: [String],
+    likes: [mongoose.Schema.Types.Object]
 });
 
 module.exports = mongoose.model('User', userSchema);;
