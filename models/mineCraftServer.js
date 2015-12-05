@@ -9,7 +9,7 @@ var mineCraftServer = mongoose.Schema({
     gameMode: String,
     gameId: Number,
     version: String,
-    plugins: String,
+    plugins: [String],
     map: String,
     numPlayersOnline: Number,
     maxPlayers: Number,
