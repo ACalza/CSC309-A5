@@ -4,7 +4,9 @@ var analytics = require("./analytics");
 var profile = require("./profile");
 var user = require("./user");
 var server = require("./server");
+var models = require("../models/index");
 var express = require("express");
+
 
 var router = express.Router();
 
@@ -14,7 +16,7 @@ router.get('/', function (req, res, next) {
     if (req.session.curUser) {
 
         //List all users
-        user.find({}, function (err, users) {
+        models.User.find({}, function (err, users) {
             res.render('index', {
                 user: req.session.curUser,
                 allUsers: users

@@ -1,15 +1,16 @@
 extends header
 
 block content
-  .jumbotron
-        div(style="text-align: left")
+  .jumbotron.container
+    .row.row-centered
+        div.center-block(style="text-align: center")
               span(style="display-inline; font-size: 20px; margin-right: 10px") #{profUser.displayName}
               if !edit && (user.type.indexOf("Admin") >= 0 || user._id == profUser._id)
                 a(href="/profile/edit/" + profUser._id) Edit
               if user.type.indexOf("Admin") >= 0
                 a(style='margin-left: 10px;', href="/analytics/" + profUser._id) Analytics
-        div
-          form(action="/profile/edit/" + profUser._id, method="post", style="display: inline-block;")
+        div.center-block
+          form(action="/profile/edit/" + profUser._id, method="post", style="display: inline-block; text-align:left")
               if errorMsg
                 div.alert.alert-danger(role='alert')= errorMsg
               if successMsg

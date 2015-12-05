@@ -5,30 +5,33 @@ block append extraHeader
     script(src='/javascripts/sortable.min.js')
 
 block content
-  .jumbotron
-    if user
-        if user.type == "User"
-            h2 Welcome, #{user.displayName}
+  .jumbotron.container
+    .row.row-centered
+        if user
+            .col.col-centered
+                if user.type == "User"
+                    h2 Welcome, #{user.displayName}
+                else
+                    h2 Welcome, Administrator #{user.displayName}
+                table.table.table-striped(data-sortable='')
+                    thead
+                      tr
+                        th Display Name
+                        th Email
+                    tbody
+                        mixin user(display, email, id)
+                            tr
+                                td
+                                    a(href="/profile/view/" + id)= display
+                                td
+                                    a(href="/profile/view/" + id)= email
+                        for usr in allUsers
+                            +user(usr.displayName, usr.email, usr._id)  
+
         else
-            h2 Welcome, Administrator #{user.displayName}
-        table.table.table-striped(data-sortable='')
-            thead
-              tr
-                th Display Name
-                th Email
-            tbody
-                mixin user(display, email, id)
-                    tr
-                        td
-                            a(href="/profile/view/" + id)= display
-                        td
-                            a(href="/profile/view/" + id)= email
-                for usr in allUsers
-                    +user(usr.displayName, usr.email, usr._id)  
-                            
-    else
-        h1 Welcome to Profiles
-        p
-          a.btn.btn-lg.btn-success(href='/user/register', role='button') Register
-        p
-          a.btn.btn-lg.btn-success(href='/auth/local/login', role='button') Sign in
+            .col.col-centered
+                h1 Welcome to Profiles
+                p
+                  a.btn.btn-lg.btn-success(href='/user/register', role='button') Register
+                p
+                  a.btn.btn-lg.btn-success(href='/auth/local/login', role='button') Sign in
