@@ -41,10 +41,17 @@ server.on('error', onError);
 server.on('listening', onListening);
 
 //Update minecraft server info every 5 minutes
-setInterval(1000 * 60 * 5, function () {
-    minecraftUpdater.updateAllServers();
-});
+function doUpdate() {
 
+
+    setTimeout(function () {
+        minecraftUpdater.updateAllServers(function () {
+            doUpdate();
+        });
+    }, 1000 * 60 * 5); //millis * seconds (millis = 1000) * minutes (seconds = 60)
+}
+
+doUpdate();
 /**
  * Normalize a port into a number, string, or false.
  */
