@@ -147,6 +147,8 @@ router.get('/like/:server_id', function(req, res) {
                                 error: "Database error - " + err
                             });
                         }
+                        //Update curUser
+                        req.session.curUser = userModel;
                         console.log("User " + req.session.curUser.displayName + " liked server " + req.params.server_id);
                         res.send("User " + req.session.curUser.displayName + " liked server " + req.params.server_id);
                     })
@@ -178,20 +180,41 @@ router.get('/recomendations', function(req, res) {
             error: "Not logged in"
         })
     }
+
     var maxRecomendations = req.body.maxRecomendations
     if (maxRecomendations) {
         maxRecomendations = req.session.curUser.likes.length;
     }
     req.body.possibleServers = {}
-
+    //Current user likes (to be added as a new String, JS is acting strange)
+    req.body.likes = []
     recomendationRecursion(0, maxRecomendations, req, res);
+
 
 })
 
+function filterAndSort(req, res){
+    var serverRecomendations = [];
+    //Classic n^2 algoirthm
+    for(server in req.body.possibleServers){
+        var max = req.body.possibleServers[server];
+
+        for(possibleMax in req.body.possibleServers){
+            if(req.body.possibleServers[possibleMax] > max){
+                max = req.body.possibleServers[possibleMax];
+            }
+        }
+        serverRecomendations.push(serverRecomendations);
+    }
+
+
+    return res.send(req.body.possibleServers);
+}
 function recomendationRecursion(index, maxRecomendations, req, res) {
     var curUser = req.session.curUser;
+
     if (curUser.likes.length === index || index === maxRecomendations) {
-        return res.send(req.body.possibleServers);
+        filterAndSort(req, res);
     } else {
         ServerDB.findById(curUser.likes[index], function(err, server) {
             if (err) {
@@ -199,19 +222,20 @@ function recomendationRecursion(index, maxRecomendations, req, res) {
                 return res.json({
                     error: "Database error - " + err
                 });
-            }
-            //go through each server
-            //Start with plugins
+            };
+
+            //go through each server MCQuery issues so ; for nodemon D:
             for (var i = 0; i < req.body.servers.length; i++) {
-                var rank = 0;
-                console.log(server._id);
                 console.log(req.body.servers[i]._id);
-                //For some reason JS isnt working when I compare them properly
-                if (new String(server._id).valueOf() === new String(req.body.servers[i]._id).valueOf()) {
-                    console.log("They're equal lol...");
+                var rank = 0;
+                if(curUser.likes.indexOf(new String(req.body.servers[i]._id).valueOf()) !== -1) {
+                    console.log("here");
                     continue;
-                }
+
+                };
+
                 req.body.servers[i].plugins.forEach(function(plugin) {
+
                     if (server.plugins.indexOf(plugin) !== -1) {
                         rank += 1;
                     }
@@ -228,11 +252,17 @@ function recomendationRecursion(index, maxRecomendations, req, res) {
                     rank += 10; //Within range, we give it a greater score
                 } else if (server.maxPlayers >= req.body.servers[i].maxPlayers - 50) {
                     rank += 1; //otherwise add 1 to the value
-                }
-                req.body.possibleServers[req.body.servers[i]._id] = {
-                        "rank": rank,
-                        "server": server
                 };
+
+                if(req.body.possibleServers[req.body.servers[i]._id]){
+                    req.body.possibleServers[req.body.servers[i]._id]["rank"] += rank;
+                }else{
+                    req.body.possibleServers[req.body.servers[i]._id] = {
+                            "rank": rank,
+                            "server": server
+                    };
+                }
+                //I'm getting weird bugs if I dont add ; "challenge token" from mcquery crashes
             }
 
             recomendationRecursion(index + 1, maxRecomendations, req, res);
