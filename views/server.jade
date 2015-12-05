@@ -33,8 +33,8 @@ block content
         h4 Dynamic Map
         iframe(src="http://" + server.ip+":8123")
       h2.sub-header Players Online
-      .table-responsive
-        table.table.table-striped
+      .table-responsive.table.display
+        table#PlayersOnline.table.table-striped
           thead
             tr
               th Name
@@ -44,8 +44,8 @@ block content
                     th=player
                     
       h2.sub-header Players History
-      .table-responsive
-        table.table.table-striped
+      .table-responsive.table.display
+        table#PlayersHistory.table.table-striped
           thead
             tr
               th Name
@@ -55,6 +55,37 @@ block content
                 tr
                     th=player.name
                     th=player.lastOnline
+                    
+        script(type='text/javascript').
+            function initTable(tableID){
+            var table = $(tableID).DataTable();
+
+            $(tableID + ' tfoot th').each( function () {
+            var title = $(this).text();
+            $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+            } );  
+
+
+
+            // Apply the search
+            table.columns().every( function () {
+                var that = this;
+
+                $( 'input', this.footer() ).on( 'keyup change', function () {
+                    if ( that.search() !== this.value ) {
+                        that
+                            .search( this.value )
+                            .draw();
+                    }
+                } );
+            } );
+
+
+            }
+            $(document).ready(function(){
+                initTable("#PlayersHistory");
+                initTable("#PlayersOnline")
+            });
                     
      h2.sub-header Comments
       div To be Implemented ty
