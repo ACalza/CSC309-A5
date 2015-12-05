@@ -126,28 +126,35 @@ router.get('/like/:server_id', function(req, res){
                 error: "Server ID not found"
             })
         }else{
-            req.session.curUser.likes.push(req.params.server_id);
-            req.session.curUser.save(function(err, user){
-                if(err){
-                    res.status(503);
-                    console.error(err);
-                    return res.json({
-                        error: "Database error - " + err
-                    })
-                }
-                server.save(function(err, serverModel){
+
+            User.findById(req.session.curUser._id, function(err, userModel){
+
+                userModel.likes.push(req.params.server_id);
+                userModel.save(function(err, user){
                     if(err){
                         res.status(503);
                         console.error(err);
                         return res.json({
                             error: "Database error - " + err
-                        });
+                        })
                     }
-                    console.log("User " + curUser.displayName + " liked server " + req.params.server_id);
-                    res.send("User " + curUser.displayName + " liked server " + req.params.server_id);
-                })
+                    server.likes.push(userModel._id);
+                    server.save(function(err, serverModel){
+                        if(err){
+                            console.log("I shouldnt be here");
+                            res.status(503);
+                            console.error(err);
+                            return res.json({
+                                error: "Database error - " + err
+                            });
+                        }
+                        console.log("User " + req.session.curUser.displayName + " liked server " + req.params.server_id);
+                        res.send("User " + req.session.curUser.displayName + " liked server " + req.params.server_id);
+                    })
 
+                })
             })
+
         }
     })
 })
