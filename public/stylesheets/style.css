@@ -16,3 +16,9 @@ tfoot input {
 iframe {
     resize: both;
 }
+.colorless-link,
+.colorless-link:visited,
+.colorless-link:hover,
+.colorless-link:active {
+    color: inherit;
+}
