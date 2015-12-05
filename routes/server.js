@@ -141,7 +141,7 @@ router.get('/like/:server_id', function(req, res){
                         console.error(err);
                         return res.json({
                             error: "Database error - " + err
-                        })
+                        });
                     }
                     console.log("User " + curUser.displayName + " liked server " + req.params.server_id);
                     res.send("User " + curUser.displayName + " liked server " + req.params.server_id);

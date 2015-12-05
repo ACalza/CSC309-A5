@@ -14,7 +14,7 @@ router.get('/', function (req, res, next) {
     if (req.session.curUser) {
 
         //List all users
-        models.User.find({}, function (err, users) {
+        user.find({}, function (err, users) {
             res.render('index', {
                 user: req.session.curUser,
                 allUsers: users
