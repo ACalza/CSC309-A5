@@ -19,7 +19,8 @@ var mineCraftServer = mongoose.Schema({
     playerHistory: [{
         name: String,
         lastOnline: Date
-    }]
+    }],
+    likes: [mongoose.Schema.Types.ObjectId]
 });
 
 module.exports = mongoose.model('MineCraftServer', mineCraftServer);
