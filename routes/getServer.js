@@ -14,7 +14,7 @@ router.get('/:ip', function (req, res) {
         } else {
             var i;
             for (i = 0; i < result.length; i++) {
-                if String(result[i].port) == "25565" {
+                if (String(result[i].port) == "25565") {
                     res.render('server', {
                         user: req.session.curUser,
                         server: result[i]
@@ -41,7 +41,7 @@ router.get('/:ip/:port', function (req, res) {
         } else {
             var i;
             for (i = 0; i < result.length; i++) {
-                if String(result[i].port) == port {
+                if (String(result[i].port) == port) {
                     res.render('server', {
                         user: req.session.curUser,
                         server: result[i]

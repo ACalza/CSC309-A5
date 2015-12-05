@@ -6,6 +6,7 @@ var user = require("./user");
 var server = require("./server");
 var express = require("express");
 var models = require("../models/index");
+var getServer = require("./getServer");
 
 var router = express.Router();
 
