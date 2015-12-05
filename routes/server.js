@@ -193,10 +193,28 @@ router.get('/recomendations', function(req, res) {
 
 })
 
+function filterAndSort(req, res){
+    var serverRecomendations = [];
+    //Classic n^2 algoirthm
+    for(server in req.body.possibleServers){
+        var max = req.body.possibleServers[server];
+
+        for(possibleMax in req.body.possibleServers){
+            if(req.body.possibleServers[possibleMax] > max){
+                max = req.body.possibleServers[possibleMax];
+            }
+        }
+        serverRecomendations.push(serverRecomendations);
+    }
+
+
+    return res.send(req.body.possibleServers);
+}
 function recomendationRecursion(index, maxRecomendations, req, res) {
     var curUser = req.session.curUser;
+
     if (curUser.likes.length === index || index === maxRecomendations) {
-        return res.send(req.body.possibleServers);
+        filterAndSort(req, res);
     } else {
         ServerDB.findById(curUser.likes[index], function(err, server) {
             if (err) {
@@ -204,17 +222,20 @@ function recomendationRecursion(index, maxRecomendations, req, res) {
                 return res.json({
                     error: "Database error - " + err
                 });
-            }
-            //go through each server
-            //Start with plugins
+            };
+
+            //go through each server MCQuery issues so ; for nodemon D:
             for (var i = 0; i < req.body.servers.length; i++) {
+                console.log(req.body.servers[i]._id);
                 var rank = 0;
-                //MCQuery issues, adding ; and it works for some reason
-                if (new String(server._id).valueOf() === new String(req.body.servers[i]._id).valueOf()) {
-                    req.body.likes.push(new String(server._id));
+                if(curUser.likes.indexOf(new String(req.body.servers[i]._id).valueOf()) !== -1) {
+                    console.log("here");
                     continue;
+
                 };
+
                 req.body.servers[i].plugins.forEach(function(plugin) {
+
                     if (server.plugins.indexOf(plugin) !== -1) {
                         rank += 1;
                     }
@@ -232,6 +253,7 @@ function recomendationRecursion(index, maxRecomendations, req, res) {
                 } else if (server.maxPlayers >= req.body.servers[i].maxPlayers - 50) {
                     rank += 1; //otherwise add 1 to the value
                 };
+
                 if(req.body.possibleServers[req.body.servers[i]._id]){
                     req.body.possibleServers[req.body.servers[i]._id]["rank"] += rank;
                 }else{
