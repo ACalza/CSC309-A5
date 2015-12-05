@@ -55,7 +55,7 @@ function create_server(req, res, server) {
             serverQuery.updateOneServerModel(newServer, function (err, model) {
                 if (err) {
                     res.render('createServer', {
-                        error: 'Error occured communicating with the server. Please make sure it is online. Error was ' + err;
+                        error: 'Error occured communicating with the server. Please make sure it is online. Error was ' + err
                     });
                 }
                 console.log(model);
