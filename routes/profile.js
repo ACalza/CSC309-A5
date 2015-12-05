@@ -115,6 +115,84 @@ router.get('/edit/:id/:command?', function (req, res, next) {
 
 });
 
+router.get('/like/:server_id', function(req, res){
+    if(!req.session.curUser){
+        return res.json({
+            error: "Not logged in"
+        });
+    }
+    ServerDB.findById(req.params.server_id, function(err, result){
+        if(err){
+            res.status(503);
+            res.json({
+                error: "Database error - " + err
+            });
+        }
+        else if(!result){
+            res.json({
+                error: "Server ID not found"
+            })
+        }else{
+            req.session.curUser.likes.push(req.params.server_id);
+            req.session.curUser.save(function(err, user){
+                if(err){
+                    res.status(503);
+                    console.error(err);
+                    return res.json({
+                        error: "Database error - " + err
+                    })
+                }
+                req.session.curUser = user;
+                console.log("User " + curUser.displayName + " liked server " + req.params.server_id);
+            })
+        }
+    })
+})
+
+router.use('/recomendations', function(req, res, next){
+    ServerDB.find({}, function (err, servers) {
+        if(err){
+            res.status(503);
+            console.error(err);
+            return res.json({
+                error: "Database error - " + err
+            });
+        }
+        req.body.servers = servers;
+        next();
+    })
+})
+router.post('/recomendations', function(req, res){
+    if(!req.session.curUser){
+        return res.json({
+            error: "Not logged in"
+        })
+    }
+    var maxRecomendations = req.body.maxRecomendations
+    if(maxRecomendations){
+        maxRecomendations = req.session.curUser.likes.length;
+    }
+    req.body.recomendations = [];
+    recomendationRecursion(0, maxRecomendations);
+    res.send(recomendations);
+
+})
+function recomendationRecursion(i, maxRecomendations){
+    if(curUser.likes.length === i || i === maxRecomendations){
+        return;
+    }else{
+        ServerDB.findById(curUser.likes[i], function(err, server){
+            if(err){
+                res.status(503);
+                return res.json({
+                    error: "Database error - " + err
+                });
+            }
+            req.body.recomendations.push(server)
+            recomendationRecursion(i + 1, maxRecomendations);
+        })
+    }
+}
 //TODO: Disable editing on non local accounts.
 /* POST profile edit page */
 router.post('/edit/:id/:command?', function (req, res, next) {
