@@ -25,6 +25,7 @@ block content
           //img.img-responsive(data-src='holder.js/200x200/auto/vine', alt='Generic placeholder thumbnail')
           h4=server.version
           span.text-muted Version
+      if (server.plugins.indexOf("DynMap") != -1)
         h4 Dynamic Map
         iframe(src="http://" + server.ip+":8123")
       h2.sub-header Players Online
