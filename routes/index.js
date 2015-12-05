@@ -11,18 +11,18 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-    // if (req.session.curUser) {
-    //
-    //     //List all users
-    //     user.find({}, function (err, users) {
-    //         res.render('index', {
-    //             user: req.session.curUser,
-    //             allUsers: users
-    //         });
-    //     });
-    // } else {
+    if (req.session.curUser) {
+
+        //List all users
+        user.find({}, function (err, users) {
+            res.render('index', {
+                user: req.session.curUser,
+                allUsers: users
+            });
+        });
+    } else {
         res.render('index');
-    //}
+    }
 });
 
 //All routes to be exported and added here
