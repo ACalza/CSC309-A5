@@ -27,8 +27,6 @@ block content
           span.text-muted Something else
       if (server.gameMode.indexOf("DynMap") != -1)
         iframe(src="http://" + server.ip+":8123")
-      else
-        h1=server.gameMode.indexOf("DynMap")
       h2.sub-header Players Online
       .table-responsive
         table.table.table-striped
