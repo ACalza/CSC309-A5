@@ -7,7 +7,7 @@ var User = require('../models/user');
 var serverQuery = require("../lib/server-updater.js");
 
 //create server
-router.post('/create', function(req, res) {
+router.post('/create', function (req, res) {
     if (!req.body.ip) {
         res.render('createServer', {
             error: 'Please enter an IP'
@@ -19,7 +19,7 @@ router.post('/create', function(req, res) {
     ServerDB.count({
         ip: req.body.ip,
         port: req.body.port
-    }, function(err, result) {
+    }, function (err, result) {
         console.log(req.body.ip + ":" + req.body.port + " = " + result);
         if (err) {
             console.error(err);
@@ -44,7 +44,7 @@ function create_server(req, res, server) {
         ip: server.ip,
         port: server.port
     });
-    newServer.save(function(err, newServer) {
+    newServer.save(function (err, newServer) {
         if (err) {
             res.status(500);
             res.render('error', {
@@ -52,7 +52,7 @@ function create_server(req, res, server) {
                 error: err
             });
         } else {
-            serverQuery.updateOneServerModel(newServer, function(err, model) {
+            serverQuery.updateOneServerModel(newServer, function (err, model) {
                 if (err) {
                     res.render('createServer', {
                         error: 'Error occured communicating with the server. Please make sure it is online. Error was ' + err
@@ -60,13 +60,13 @@ function create_server(req, res, server) {
                 }
                 console.log(model);
                 res.send("OK"); //TODO: Redirect to server view
-            });
+            }, 3);
         }
     });
 }
 
-router.get('/list', function(req, res, next) {
-    ServerDB.find({}, function(err, result) {
+router.get('/list', function (req, res, next) {
+    ServerDB.find({}, function (err, result) {
         if (err) {
             console.error(err);
             return res.send("500 Internal Server Error");
@@ -79,7 +79,7 @@ router.get('/list', function(req, res, next) {
     });
 });
 
-router.get('/comment/list/:server_id', function(req, res, next) {
+router.get('/comment/list/:server_id', function (req, res, next) {
     if (!req.params.server_id || !req.body.text) {
         res.json({
             error: "Server id empty"
@@ -88,7 +88,7 @@ router.get('/comment/list/:server_id', function(req, res, next) {
     }
     ServerDB.findOne({
         _id: req.params.server_id //TODO: Invalid server_id might cause crash if not proper format
-    }, function(err, server) {
+    }, function (err, server) {
         if (err) {
             res.status(503);
             res.json({
@@ -101,20 +101,20 @@ router.get('/comment/list/:server_id', function(req, res, next) {
         } else {
             Comment.find({
                 server: server._id
-            }, function(err, comments) {
+            }, function (err, comments) {
                 res.json(comments);
             });
         }
     });
 });
 
-router.get('/like/:server_id', function(req, res) {
+router.get('/like/:server_id', function (req, res) {
     if (!req.session.curUser) {
         return res.json({
             error: "Not logged in"
         });
     }
-    ServerDB.findById(req.params.server_id, function(err, server) {
+    ServerDB.findById(req.params.server_id, function (err, server) {
         if (err) {
             res.status(503);
             res.json({
@@ -126,10 +126,10 @@ router.get('/like/:server_id', function(req, res) {
             })
         } else {
 
-            User.findById(req.session.curUser._id, function(err, userModel) {
+            User.findById(req.session.curUser._id, function (err, userModel) {
 
                 userModel.likes.push(req.params.server_id);
-                userModel.save(function(err, user) {
+                userModel.save(function (err, user) {
                     if (err) {
                         res.status(503);
                         console.error(err);
@@ -138,7 +138,7 @@ router.get('/like/:server_id', function(req, res) {
                         })
                     }
                     server.likes.push(userModel._id);
-                    server.save(function(err, serverModel) {
+                    server.save(function (err, serverModel) {
                         if (err) {
                             console.log("I shouldnt be here");
                             res.status(503);
@@ -160,8 +160,8 @@ router.get('/like/:server_id', function(req, res) {
     })
 })
 
-router.use('/recomendations', function(req, res, next) {
-        ServerDB.find({}, function(err, servers) {
+router.use('/recomendations', function (req, res, next) {
+        ServerDB.find({}, function (err, servers) {
             if (err) {
                 res.status(503);
                 console.error(err);
@@ -174,7 +174,7 @@ router.use('/recomendations', function(req, res, next) {
         })
     })
     //TODO change to post request?
-router.get('/recomendations', function(req, res) {
+router.get('/recomendations', function (req, res) {
     if (!req.session.curUser) {
         return res.json({
             error: "Not logged in"
@@ -186,21 +186,21 @@ router.get('/recomendations', function(req, res) {
         maxRecomendations = req.session.curUser.likes.length;
     }
     req.body.possibleServers = {}
-    //Current user likes (to be added as a new String, JS is acting strange)
+        //Current user likes (to be added as a new String, JS is acting strange)
     req.body.likes = []
     recomendationRecursion(0, maxRecomendations, req, res);
 
 
 })
 
-function filterAndSort(req, res){
+function filterAndSort(req, res) {
     var serverRecomendations = [];
     //Classic n^2 algoirthm
-    for(server in req.body.possibleServers){
+    for (server in req.body.possibleServers) {
         var max = req.body.possibleServers[server];
 
-        for(possibleMax in req.body.possibleServers){
-            if(req.body.possibleServers[possibleMax] > max){
+        for (possibleMax in req.body.possibleServers) {
+            if (req.body.possibleServers[possibleMax] > max) {
                 max = req.body.possibleServers[possibleMax];
             }
         }
@@ -210,13 +210,14 @@ function filterAndSort(req, res){
 
     return res.send(req.body.possibleServers);
 }
+
 function recomendationRecursion(index, maxRecomendations, req, res) {
     var curUser = req.session.curUser;
 
     if (curUser.likes.length === index || index === maxRecomendations) {
         filterAndSort(req, res);
     } else {
-        ServerDB.findById(curUser.likes[index], function(err, server) {
+        ServerDB.findById(curUser.likes[index], function (err, server) {
             if (err) {
                 res.status(503);
                 return res.json({
@@ -228,21 +229,20 @@ function recomendationRecursion(index, maxRecomendations, req, res) {
             for (var i = 0; i < req.body.servers.length; i++) {
                 console.log(req.body.servers[i]._id);
                 var rank = 0;
-                if(curUser.likes.indexOf(new String(req.body.servers[i]._id).valueOf()) !== -1) {
+                if (curUser.likes.indexOf(new String(req.body.servers[i]._id).valueOf()) !== -1) {
                     console.log("here");
                     continue;
 
                 };
 
-                req.body.servers[i].plugins.forEach(function(plugin) {
+                req.body.servers[i].plugins.forEach(function (plugin) {
 
                     if (server.plugins.indexOf(plugin) !== -1) {
                         rank += 1;
                     }
                 });
 
-                if (server.numPlayersOnline >= req.body.servers[i].numPlayersOnline - 20
-                    && server.numPlayersOnline <= req.body.servers[i].numPlayersOnline + 20) {
+                if (server.numPlayersOnline >= req.body.servers[i].numPlayersOnline - 20 && server.numPlayersOnline <= req.body.servers[i].numPlayersOnline + 20) {
 
                     rank += 10; //Within range, we give it a greater score
                 } else if (server.numPlayersOnline >= req.body.servers[i].numPlayersOnline - 20) {
@@ -254,12 +254,12 @@ function recomendationRecursion(index, maxRecomendations, req, res) {
                     rank += 1; //otherwise add 1 to the value
                 };
 
-                if(req.body.possibleServers[req.body.servers[i]._id]){
+                if (req.body.possibleServers[req.body.servers[i]._id]) {
                     req.body.possibleServers[req.body.servers[i]._id]["rank"] += rank;
-                }else{
+                } else {
                     req.body.possibleServers[req.body.servers[i]._id] = {
-                            "rank": rank,
-                            "server": server
+                        "rank": rank,
+                        "server": server
                     };
                 }
                 //I'm getting weird bugs if I dont add ; "challenge token" from mcquery crashes
@@ -270,7 +270,7 @@ function recomendationRecursion(index, maxRecomendations, req, res) {
     }
 }
 //TODO: Move to router?
-router.post('/comment/add/:server_id', function(req, res, next) {
+router.post('/comment/add/:server_id', function (req, res, next) {
     if (!req.session.curUser) {
         res.json({
             error: "Not logged in"
@@ -285,7 +285,7 @@ router.post('/comment/add/:server_id', function(req, res, next) {
     }
     ServerDB.findOne({
         _id: req.params.server_id //TODO: Invalid server_id might cause crash if not proper format
-    }, function(err, server) {
+    }, function (err, server) {
         if (err) {
             res.json({
                 error: "Database error - " + err
@@ -301,7 +301,7 @@ router.post('/comment/add/:server_id', function(req, res, next) {
                 text: req.body.text,
                 verified: req.session.curUser.accountSource == "Minecraft" && server.playerHistory.indexOf(req.session.curUser.displayName) >= 0
             });
-            comment.save(function(err) {
+            comment.save(function (err) {
                 if (err) {
                     res.json({
                         error: "Server id not found"
@@ -315,10 +315,10 @@ router.post('/comment/add/:server_id', function(req, res, next) {
 
 });
 
-router.get('/:ip', function(req, res) {
+router.get('/:ip', function (req, res) {
     ServerDB.find({
         ip: req.params.ip
-    }, function(err, result) {
+    }, function (err, result) {
         if (err) {
             console.log(err);
             return res.send('500 Internal Server Error');
@@ -340,12 +340,12 @@ router.get('/:ip', function(req, res) {
 });
 
 
-router.get('/:ip/:port', function(req, res) {
+router.get('/:ip/:port', function (req, res) {
     var ip = req.params.ip
     var port = req.params.port
     ServerDB.find({
         ip: ip
-    }, function(err, result) {
+    }, function (err, result) {
         if (err) {
             console.log(err);
             return res.send('500 Internal Server Error');
