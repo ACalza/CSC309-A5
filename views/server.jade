@@ -10,22 +10,21 @@ block content
       h1.page-header=server.title + ' (' + server.ip + ':' + server.port + ')'
       .row.placeholders
         .col-xs-6.col-sm-3.placeholder
-          img.img-responsive(data-src='holder.js/200x200/auto/sky', alt='Generic placeholder thumbnail')
-          h4 Label
-          span.text-muted Something else
+          //img.img-responsive(data-src='holder.js/200x200/auto/sky', alt='Generic placeholder thumbnail')
+          h4=server.map
+          span.text-muted Map
         .col-xs-6.col-sm-3.placeholder
-          img.img-responsive(data-src='holder.js/200x200/auto/vine', alt='Generic placeholder thumbnail')
-          h4 Label
-          span.text-muted Something else
+          //img.img-responsive(data-src='holder.js/200x200/auto/vine', alt='Generic placeholder thumbnail')
+          h4=server.gameMode
+          span.text-muted Game Mode
         .col-xs-6.col-sm-3.placeholder
-          img.img-responsive(data-src='holder.js/200x200/auto/sky', alt='Generic placeholder thumbnail')
-          h4 Label
-          span.text-muted Something else
+          //img.img-responsive(data-src='holder.js/200x200/auto/sky', alt='Generic placeholder thumbnail')
+          h4=server.numPlayersOnline + "/" + server.maxPlayers
+          span.text-muted Players Online
         .col-xs-6.col-sm-3.placeholder
-          img.img-responsive(data-src='holder.js/200x200/auto/vine', alt='Generic placeholder thumbnail')
-          h4 Label
-          span.text-muted Something else
-      if (server.gameMode.indexOf("DynMap") != -1)
+          //img.img-responsive(data-src='holder.js/200x200/auto/vine', alt='Generic placeholder thumbnail')
+          h4=server.version
+          span.text-muted Version
         h4 Dynamic Map
         iframe(src="http://" + server.ip+":8123")
       h2.sub-header Players Online
