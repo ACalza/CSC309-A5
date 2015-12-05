@@ -13,3 +13,6 @@ tfoot input {
     box-sizing: border-box;
     display: table-header-group;
 }
+iframe {
+    resize: both;
+}
