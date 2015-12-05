@@ -5,7 +5,7 @@ var Query = require("mcquery");
 var mcData = require("minecraft-data");
 
 router.get('/:ip', function (req, res) {
-    db.find({
+    serverDb.find({
         ip: req.params.ip
     }, function (err, result) {
         if (err) {
@@ -32,7 +32,7 @@ router.get('/:ip', function (req, res) {
 router.get('/:ip/:port', function (req, res) {
     var ip = req.params.ip
     var port = req.params.port
-    db.find({
+    serverDb.find({
         ip: ip
     }, function (err, result) {
         if (err) {

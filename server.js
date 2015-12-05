@@ -51,7 +51,9 @@ function doUpdate() {
     }, 1000 * 60 * 5); //millis * seconds (millis = 1000) * minutes (seconds = 60)
 }
 
-doUpdate();
+minecraftUpdater.updateAllServers(function () {
+    doUpdate();
+});
 /**
  * Normalize a port into a number, string, or false.
  */
