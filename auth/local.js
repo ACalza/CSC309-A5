@@ -19,11 +19,16 @@ var local = function (router, authCompleteCallback) {
         }
         var email = req.body.email;
         var pass = req.body.password;
+        if (!email || !pass) {
+            res.render('login', {
+                errorMsg: "Please enter an email and password"
+            });
+        }
         var loc = req.body.location;
         pass = util.md5hash(pass);
         models.User.findOne({
             email: email,
-            'local.password': pass
+            password: pass
         }, function (err, user) {
             if (user) {
                 authCompleteCallback(user, req, res, next);
