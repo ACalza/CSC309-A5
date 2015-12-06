@@ -105,7 +105,7 @@ router.get('/list', function (req, res, next) {
 });
 
 router.get('/comment/list/:server_id', function (req, res, next) {
-    if (!req.params.server_id || !req.body.text) {
+    if (!req.params.server_id) {
         res.status(503);
         return res.render('error', {
             message: error503
@@ -329,7 +329,7 @@ router.post('/comment/add/:server_id', function (req, res, next) {
                 poster: req.session.curUser._id,
                 server: server._id,
                 text: req.body.text,
-                displayName: curUser.displayName,
+                displayName: req.session.curUser.displayName,
                 verified: req.session.curUser.accountSource == "Minecraft" && server.playerHistory.indexOf(req.session.curUser.displayName) >= 0
             });
             comment.save(function (err) {
