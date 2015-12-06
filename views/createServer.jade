@@ -3,16 +3,16 @@ extends header
 block content
   .jumbotron.container
     .row.row-centered
-      if errorMsg
-        div.alert.alert-danger(role='alert')= errorMsg
+      if error
+        div.alert.alert-danger(role='alert')= error
       .col.col-centered
-          form(role='form', action='/create/' method='post')
+          form(role='form', action='/server/create/' method='post')
               .form-group
-                label(for='ip') Display Name:
+                label(for='ip') IP or Hostname:
                 input#ip.form-control(type='text' name='ip')
                 
               .form-group
                 label(for='port') Port:
-                input#port.form-control(type='text' name='port')
+                input#port.form-control(type='number' name='port')
                 
               button.btn.btn-primary(type='submit') Create Server
