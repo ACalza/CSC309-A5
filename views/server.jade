@@ -123,27 +123,48 @@ block content
                 
 
         script(type='text/javascript').
+            function setUserInfo(imgID, nameID, userID){
+            
+                $.get('/user/' + userID, function(user){
+                console.log(user.result);
+                   console.log("Got here");
+                   console.log(imgID);
+                    $(imgID).attr("src", user.result.img);
+                    $(nameID).html(user.result.displayName);
+                    });
+            }
             $.get('/server/comment/list/' + "#{server._id}", function(results){
                 var comments = $("#comments");
                 for (i = 0; i < results.length; i++){
                     var contents = "";
                     contents += '<div class="row row-centered" style="background-color: white">';
                     
-                   contents += '<div class="col col-md-5">';
+                    user = undefined;
+                    
+                    //Profile picture
+                    contents += '<div class="col col-md-2">';
+                    contents += '<img id="img' + i +'" src="" class="img-thumbnail" width=50, height=50>';
+                    contents+= '</div>'   
+                    
+                    //Poster's name
+                   contents += '<div class="col col-md-3">';
                    if (results[i].verified)
                     contents += '<p color="green">';
                    else
-                    contents += '<p class="p">';
+                    contents += '<p class="p" id="usr' + i + '">';
                    contents += results[i].username;
                    contents += '</p></div>';
                    
+                   setUserInfo("#img" + i, "#usr" + i, results[i].poster);
+                   
+                   //Date Posted
                    contents += '<div class="col col-md-7"><p class="p">';
                    contents += "Date Posted: " + results[i].date;
                    contents += '</p></div>';
                    
                    contents += '</div>';
                    
-                   contents += '<div class="row row-centered">';
+                   //Comment text
                    contents += '<div class="row row-centered">';
                    contents += '<div class "col col-md-10"><p>';
                    contents += results[i].text;
