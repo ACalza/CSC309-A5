@@ -6,7 +6,11 @@ var commentSchema = Schema({
     poster: Schema.Types.ObjectId,
     text: String,
     //rating: Number, //0 - No rating, 1 - dislike, 2 - liked
-    verified: Boolean // Has the user been known to play on this server?
+    verified: Boolean, // Has the user been known to play on this server?
+    username: String,
+    datePosted: String,
+    date: { type: Date,
+        default: Date.now }
 });
 
 module.exports = mongoose.model('Comment', commentSchema);
