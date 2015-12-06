@@ -29,7 +29,12 @@ block content
           //img.img-responsive(data-src='holder.js/200x200/auto/vine', alt='Generic placeholder thumbnail')
           h4=server.version
           span.text-muted Version
-      if (server.plugins.indexOf("DynMap") != -1)
+        .jumbotron
+            .row.row-centered
+              h4 Plugins
+              each plugin in server.plugins
+                span.text-muted=plugin + ", "
+      if ((server.plugins.indexOf("DynMap") != -1) || (server.plugins.indexOf("Dynmap") != -1) || (server.plugins.indexOf("dynmap") != -1))
         h4 Dynamic Map
         iframe(src="http://" + server.ip+":8123" width="100%" height="500")
       h2.sub-header Players Online
@@ -86,7 +91,58 @@ block content
                 initTable("#PlayersHistory");
                 initTable("#PlayersOnline")
             });
+     .container.jumbotron
+        .row.row-centered
+            if user   
+                .col.col-centered
+                    form(action="/server/comment/add/" + server._id, method="post")
+                        .form-group
+                            textarea.form-control(type="text" name="text" style="width: 100%;")
+                            button.btn.btn-primary(type='submit') Comment
+             h2.sub-header Comments
+             #comments
+          //
+             .row.row-centered
+                .col.col-md-8
+                    p Name of Duder
+                .col.col-md-4
+                    p Date of Dude
+             .row.row-centered
+                p Text of comment
+                
+
+        script(type='text/javascript').
+            $.get('/server/comment/list/' + "#{server._id}", function(results){
+                var comments = $("#comments");
+                console.log(results);
+                for (i = 0; i < results.length; i++){
+                    var contents = "";
+                    contents += '<div class="row row-centered">';
                     
-     h2.sub-header Comments
-      div To be Implemented ty
+                   contents += '<div class="col col-md-8">';
+                   
+                   if (results[i].verified)
+                    contents += '<p color="green">';
+                   else
+                    contents += '<p>';
+                   contents += "Name";
+                   contents += '</p></div>';
+                   
+                   contents += '<div class="col col-md-4"><p>';
+                   contents += "Date Posted:";
+                   contents += '</p></div>';
+                   
+                   contents += '<div class="row row-centered">';
+                   contents += '<div class "col"><p>';
+                   contents += results[i].text;
+                   contents += '</p></div></div>';
+                   
+                   contents += '</div>';
+                   
+                   comments.append(contents);
+                }
+                
+            });
+        
+            
      
