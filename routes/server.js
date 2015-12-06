@@ -137,7 +137,12 @@ router.get('/like/:server_id', function (req, res) {
         } else {
 
             User.findById(req.session.curUser._id, function (err, userModel) {
-
+                if(userModel.likes.indexOf(req.params.server_id) !== -1){
+                    res.status(304);
+                    return res.render('error', {
+                        message: "Status 304, not modified"
+                    });
+                }
                 userModel.likes.push(req.params.server_id);
                 userModel.save(function (err, user) {
                     if (err) {
