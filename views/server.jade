@@ -99,7 +99,8 @@ block content
                             textarea.form-control(type="text" name="text" style="width: 500px; height: 150px;")
                             button.btn.btn-primary(type='submit' onclick='setInterval(function(){ window.location.reload(); }, 500)') Comment
              h2.sub-header Comments
-             #comments
+             .container
+                #comments
           //
              .row.row-centered
                 .col.col-md-8
@@ -120,20 +121,22 @@ block content
                     contents += '<div class="row row-centered">';
                     
                    contents += '<div class="col col-md-5">';
-                   
                    if (results[i].verified)
                     contents += '<p color="green">';
                    else
-                    contents += '<p>';
+                    contents += '<p class="p">';
                    contents += results[i].username;
                    contents += '</p></div>';
                    
-                   contents += '<div class="col col-md-7"><p>';
+                   contents += '<div class="col col-md-7"><p class="p">';
                    contents += "Date Posted: " + results[i].date;
                    contents += '</p></div>';
                    
+                   contents += '</div>';
+                   
                    contents += '<div class="row row-centered">';
-                   contents += '<div class "col"><p>';
+                   contents += '<div class="row row-centered">';
+                   contents += '<div class "col col-md-10"><p>';
                    contents += results[i].text;
                    contents += '</p></div></div>';
                    
