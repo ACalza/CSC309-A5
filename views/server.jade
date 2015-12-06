@@ -129,8 +129,7 @@ block content
                 console.log(user.result);
                    console.log("Got here");
                    console.log(imgID);
-                    $(imgID).attr("src", user.result.img);
-                    $(nameID).html(user.result.displayName);
+                    $(imgID).attr("src", user.img);
                     $(nameID).html(user.displayName);
                     });
             }
@@ -143,12 +142,12 @@ block content
                     user = undefined;
                     
                     //Profile picture
-                    contents += '<div class="col col-md-2">';
+                    contents += '<div class="col col-md-1">';
                     contents += '<img id="img' + i +'" src="" class="img-thumbnail" width=50, height=50>';
                     contents+= '</div>'   
                     
                     //Poster's name
-                   contents += '<div class="col col-md-3">';
+                   contents += '<div class="col col-md-4" style="text-align: left">';
                    if (results[i].verified)
                     contents += '<p color="green">';
                    else
