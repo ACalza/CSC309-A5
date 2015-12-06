@@ -1,5 +1,5 @@
 var express = require('express');
-var models = require("../models/index");
+var User = require("../models/user");
 
 var router = express.Router();
 
@@ -20,7 +20,7 @@ router.get('/:id?', function (req, res, next) {
         if (req.params.id) {
 
             //Find the requested user
-            models.User.findOne({
+            User.findOne({
                 _id: req.params.id
             }, function (err, user) {
                 if (err) {

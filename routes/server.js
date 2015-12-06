@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var ServerDB = require('../models/index').MineCraftServer;
-var Comment = require('../models/index').Comment;
+var ServerDB = require('../models/MineCraftServer');
+var Comment = require('../models/comment');
 var User = require('../models/user');
 
 var serverQuery = require("../lib/server-updater.js");
@@ -26,7 +26,8 @@ router.post('/create', function (req, res) {
             res.render('createServer', {
                 error: error503
             });
-        } else if (result != 0) {
+        }
+        else if (result != 0) {
             res.status(409)
             res.render('createServer', {
                 error: 'Status 409, This server is already registered'
@@ -85,7 +86,7 @@ router.get('/list', function (req, res, next) {
 });
 
 router.get('/comment/list/:server_id', function (req, res, next) {
-    if (!req.params.server_id) {
+    if (!req.params.server_id || !req.body.text) {
         res.status(503);
         return res.render('error', {
             message: error503
@@ -135,7 +136,7 @@ router.get('/like/:server_id', function (req, res) {
             });
         } else {
             User.findById(req.session.curUser._id, function (err, userModel) {
-                if (userModel.likes.indexOf(new String(req.params.server_id).valueOf()) !== -1) {
+                if(userModel.likes.indexOf(new String(req.params.server_id).valueOf()) !== -1)
                     res.status(304);
                     return res.render('error', {
                         message: "You have already liked this server!"
@@ -240,7 +241,7 @@ function recomendationRecursion(index, maxRecomendations, req, res) {
             //go through each server MCQuery issues so ; for nodemon D:
             for (var i = 0; i < req.body.servers.length; i++) {
                 var rank = 0
-                if (curUser.likes.indexOf(new String(req.body.servers[i]._id).valueOf()) !== -1) {
+                if(curUser.likes.indexOf(new String(req.body.servers[i]._id).valueOf()) !== -1) {
                     continue;
                 };
 
