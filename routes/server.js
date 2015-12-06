@@ -10,7 +10,8 @@ var error503 = 'Status 503 server error';
 router.post('/create', function (req, res) {
     if (!req.body.ip) {
         res.render('createServer', {
-            error: 'Please enter an IP'
+            error: 'Please enter an IP',
+            user: req.user
         });
     }
     if (!req.body.port) {
@@ -24,7 +25,8 @@ router.post('/create', function (req, res) {
         if (err) {
             res.status(503);
             res.render('createServer', {
-                error: error503
+                error: error503,
+                user: req.session.curUser
             });
         } else if (result != 0) {
             res.status(409)
@@ -37,6 +39,12 @@ router.post('/create', function (req, res) {
                 port: req.body.port
             });
         }
+    });
+});
+
+router.get('/create', function (req, res) {
+    res.render('createServer', {
+        user: req.session.curUser
     });
 });
 
@@ -61,7 +69,7 @@ function create_server(req, res, server) {
                     });
                 }
                 res.status(200);
-                res.send("OK"); //TODO: Redirect to server view
+                res.redirect('/' + server.ip + '/' + server.port); //TODO: Redirect to server view
             }, 3);
         }
     });
@@ -139,8 +147,8 @@ router.get('/like/:server_id', function (req, res) {
                             res.status(304);
                         return res.render('error', {
                             message: "You have already liked this server!"
-                        })
-                    }
+                        });
+                    
                     userModel.likes.push(req.params.server_id); userModel.save(function (err, user) {
                         if (err) {
                             res.status(503);
