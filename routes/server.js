@@ -3,7 +3,7 @@ var router = express.Router();
 var ServerDB = require('../models/index').MineCraftServer;
 var Comment = require('../models/index').Comment;
 var User = require('../models/user');
-var serverQuery = require("../lib/server-info.js");
+var serverQuery = require("../lib/server-updater");
 
 var error503 = 'Status 503 server error';
 //create server
@@ -39,7 +39,7 @@ router.post('/create', function (req, res) {
         } else if (result != 0) {
             res.status(409)
             res.render('createServer', {
-                error: 'Status 409, This server is already registered'
+                error: 'This server is already registered'
             });
         } else {
             create_server(req, res, {
@@ -67,35 +67,19 @@ function create_server(req, res, server) {
         port: server.port
     });
 
-    serverQuery(server.ip, server.port, false, function (err, stat) {
+    serverQuery.updateOneServerModel(newServer, function (err, model) {
         if (err) {
+            console.log("Error");
             res.status(503);
-            return res.render('error', {
-                message: "Invalid Server input (Status 503)"
+            res.render('createServer', {
+                user: req.session.curUser,
+                error: "Server could not be contacted. Please make sure it is online."
             });
+            return;
         }
-        newServer.save(function (err, newServer) {
-            if (err) {
-                res.status(503);
-                res.render('error', {
-                    message: error503
-                });
-            } else {
-                serverQuery.updateOneServerModel(newServer, function (err, model) {
-                    if (err) {
-                        console.log("Error");
-                        res.status(503);
-                        res.render('error', {
-                            message: error503
-                        });
-                    }
-                    console.log('printhere');
-                    res.status(200);
-                    res.redirect('/server/' + server.ip + '/' + server.port); //TODO: Redirect to server view
-                }, 3);
-            }
-        });
-    })
+        res.status(200); //Not necessary? redirect has it's own status code?
+        res.redirect('/server/' + server.ip + '/' + server.port); //TODO: Redirect to server view
+    }, 3);
 
 
 }
