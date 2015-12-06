@@ -87,18 +87,16 @@ block content
 
 
             }
-            $(document).ready(function(){
-                initTable("#PlayersHistory");
-                initTable("#PlayersOnline")
-            });
+            
      .container.jumbotron
         .row.row-centered
             if user   
                 .col.col-centered
-                    form(action="/server/comment/add/" + server._id, method="post")
+                    iframe#dummyFrame(width='0' height='0' border='0' name='dummyFrame' style="display: none;")
+                    form#commentSubmission(action="/server/comment/add/" + server._id, method="post" target='dummyFrame')
                         .form-group
                             textarea.form-control(type="text" name="text" style="width: 100%;")
-                            button.btn.btn-primary(type='submit') Comment
+                            button.btn.btn-primary(type='submit' onclick='setInterval(function(){ window.location.reload(); }, 500)') Comment
              h2.sub-header Comments
              #comments
           //
@@ -109,6 +107,7 @@ block content
                     p Date of Dude
              .row.row-centered
                 p Text of comment
+        
                 
 
         script(type='text/javascript').
@@ -142,7 +141,4 @@ block content
                    comments.append(contents);
                 }
                 
-            });
-        
-            
-     
+                });
