@@ -7,7 +7,7 @@ var session = require('express-session');
 var bodyParser = require('body-parser');
 var crypto = require('crypto');
 var util = require('./util');
-
+var compress = require('compression');
 var app = express();
 var mongoose = require('mongoose');
 
@@ -30,7 +30,7 @@ app.use(session({
     saveUninitialized: true
 }));
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(compress());
 //=================MY MODULES
 var routes = require('./routes/index');
 var profile = require('./routes/profile');

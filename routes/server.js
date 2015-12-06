@@ -5,7 +5,7 @@ var Comment = require('../models/index').Comment;
 var User = require('../models/user');
 
 var serverQuery = require("../lib/server-updater.js");
-
+var error503 = 'Status 503 server error';
 //create server
 router.post('/create', function (req, res) {
     if (!req.body.ip) {
@@ -22,12 +22,15 @@ router.post('/create', function (req, res) {
     }, function (err, result) {
         console.log(req.body.ip + ":" + req.body.port + " = " + result);
         if (err) {
-            console.error(err);
-            return res.send("500 Internal Server Error");
-        }
-        if (result != 0) {
+            res.status(503);
             res.render('createServer', {
-                error: 'This server is already registered'
+                error: error503
+            });
+        }
+        else if (result != 0) {
+            res.status(409)
+            res.render('createServer', {
+                error: 'Status 409, This server is already registered'
             });
         } else {
             create_server(req, res, {
@@ -46,19 +49,19 @@ function create_server(req, res, server) {
     });
     newServer.save(function (err, newServer) {
         if (err) {
-            res.status(500);
+            res.status(503);
             res.render('error', {
-                message: "Database error",
-                error: err
+                message: error503
             });
         } else {
             serverQuery.updateOneServerModel(newServer, function (err, model) {
                 if (err) {
-                    res.render('createServer', {
-                        error: 'Error occured communicating with the server. Please make sure it is online. Error was ' + err
+                    res.status(503);
+                    res.render('error', {
+                        message: error503
                     });
                 }
-                console.log(model);
+                res.status(200);
                 res.send("OK"); //TODO: Redirect to server view
             }, 3);
         }
@@ -68,9 +71,12 @@ function create_server(req, res, server) {
 router.get('/list', function (req, res, next) {
     ServerDB.find({}, function (err, result) {
         if (err) {
-            console.error(err);
-            return res.send("500 Internal Server Error");
+            res.status(503);
+            res.render('error', {
+                message: error503
+            });
         } else {
+            res.status(200);
             res.render('servers', {
                 user: req.session.curUser,
                 servers: result
@@ -80,23 +86,24 @@ router.get('/list', function (req, res, next) {
 });
 
 router.get('/comment/list/:server_id', function (req, res, next) {
-    if (!req.params.server_id) {
-        res.json({
-            error: "Server id empty"
+    if (!req.params.server_id || !req.body.text) {
+        res.status(503);
+        return res.render('error', {
+            message: error503
         });
-        return;
     }
     ServerDB.findOne({
         _id: req.params.server_id //TODO: Invalid server_id might cause crash if not proper format
     }, function (err, server) {
         if (err) {
             res.status(503);
-            res.json({
-                error: "Database error - " + err
+            res.render('error', {
+                message: error503
             });
         } else if (server == 0) {
-            res.json({
-                error: "Server id not found"
+            res.status(404)
+            res.render('error', {
+                message: "404, Server not found"
             });
         } else {
             Comment.find({
@@ -110,41 +117,47 @@ router.get('/comment/list/:server_id', function (req, res, next) {
 
 router.get('/like/:server_id', function (req, res) {
     if (!req.session.curUser) {
-        return res.json({
-            error: "Not logged in"
+        res.status(503);
+        return res.render('error', {
+            message: error503
         });
     }
     ServerDB.findById(req.params.server_id, function (err, server) {
         if (err) {
             res.status(503);
-            res.json({
-                error: "Database error - " + err
+            res.render('error', {
+                message: error503
             });
         } else if (!server) {
-            res.json({
-                error: "Server ID not found"
-            })
+            res.status(404);
+            console.error(err);
+            res.render('error', {
+                message: "404, Server not found"
+            });
         } else {
-
             User.findById(req.session.curUser._id, function (err, userModel) {
-
+                if(userModel.likes.indexOf(new String(req.params.server_id).valueOf()) !== -1){
+                    res.status(304);
+                    return res.render('error', {
+                        message: "You have already liked this server!"
+                    })
+                }
                 userModel.likes.push(req.params.server_id);
                 userModel.save(function (err, user) {
                     if (err) {
                         res.status(503);
                         console.error(err);
-                        return res.json({
-                            error: "Database error - " + err
-                        })
+                        return res.render('error', {
+                            message: error503
+                        });
                     }
                     server.likes.push(userModel._id);
                     server.save(function (err, serverModel) {
                         if (err) {
-                            console.log("I shouldnt be here");
                             res.status(503);
                             console.error(err);
-                            return res.json({
-                                error: "Database error - " + err
+                            return res.render('error', {
+                                message: error503
                             });
                         }
                         //Update curUser
@@ -165,8 +178,8 @@ router.use('/recomendations', function (req, res, next) {
             if (err) {
                 res.status(503);
                 console.error(err);
-                return res.json({
-                    error: "Database error - " + err
+                return res.render('error', {
+                    message: error503
                 });
             }
             req.body.servers = servers;
@@ -176,9 +189,10 @@ router.use('/recomendations', function (req, res, next) {
     //TODO change to post request?
 router.get('/recomendations', function (req, res) {
     if (!req.session.curUser) {
-        return res.json({
-            error: "Not logged in"
-        })
+        res.status(530);
+        return res.render('error', {
+            message: "530 error, User not logged in"
+        });
     }
 
     var maxRecomendations = req.body.maxRecomendations
@@ -220,23 +234,18 @@ function recomendationRecursion(index, maxRecomendations, req, res) {
         ServerDB.findById(curUser.likes[index], function (err, server) {
             if (err) {
                 res.status(503);
-                return res.json({
-                    error: "Database error - " + err
+                return res.render('error', {
+                    message: error503
                 });
             };
-
             //go through each server MCQuery issues so ; for nodemon D:
             for (var i = 0; i < req.body.servers.length; i++) {
-                console.log(req.body.servers[i]._id);
-                var rank = 0;
-                if (curUser.likes.indexOf(new String(req.body.servers[i]._id).valueOf()) !== -1) {
-                    console.log("here");
+                var rank = 0
+                if(curUser.likes.indexOf(new String(req.body.servers[i]._id).valueOf()) !== -1) {
                     continue;
-
                 };
 
                 req.body.servers[i].plugins.forEach(function (plugin) {
-
                     if (server.plugins.indexOf(plugin) !== -1) {
                         rank += 1;
                     }
@@ -272,10 +281,10 @@ function recomendationRecursion(index, maxRecomendations, req, res) {
 //TODO: Move to router?
 router.post('/comment/add/:server_id', function (req, res, next) {
     if (!req.session.curUser) {
-        res.json({
-            error: "Not logged in"
+        res.status(530);
+        return res.render('error', {
+            message: "530 error, User not logged in"
         });
-        return;
     }
     if (!req.params.server_id || !req.body.text) {
         res.json({
@@ -287,8 +296,9 @@ router.post('/comment/add/:server_id', function (req, res, next) {
         _id: req.params.server_id //TODO: Invalid server_id might cause crash if not proper format
     }, function (err, server) {
         if (err) {
-            res.json({
-                error: "Database error - " + err
+            res.status(503);
+            res.render('error', {
+                message: error503
             });
         } else if (server == 0) {
             res.json({
@@ -303,8 +313,9 @@ router.post('/comment/add/:server_id', function (req, res, next) {
             });
             comment.save(function (err) {
                 if (err) {
-                    res.json({
-                        error: "Server id not found"
+                    res.status(503);
+                    res.render('error', {
+                        message: error503
                     });
                 } else {
                     res.send("OK");
@@ -320,8 +331,10 @@ router.get('/:ip', function (req, res) {
         ip: req.params.ip
     }, function (err, result) {
         if (err) {
-            console.log(err);
-            return res.send('500 Internal Server Error');
+            res.status(503);
+            res.render('error', {
+                message: error503
+            });
         } else {
             var i;
             for (i = 0; i < result.length; i++) {
@@ -331,7 +344,11 @@ router.get('/:ip', function (req, res) {
                         server: result[i]
                     });
                 } else {
-                    return res.send('Server does not exist');
+                    res.status(404);
+                    console.error(err);
+                    res.render('error', {
+                        message: "404, Server not found"
+                    });
                 }
             }
         }
@@ -347,8 +364,10 @@ router.get('/:ip/:port', function (req, res) {
         ip: ip
     }, function (err, result) {
         if (err) {
-            console.log(err);
-            return res.send('500 Internal Server Error');
+            res.status(503);
+            res.render('error', {
+                message: error503
+            });
         } else {
             var i;
             for (i = 0; i < result.length; i++) {
@@ -358,7 +377,11 @@ router.get('/:ip/:port', function (req, res) {
                         server: result[i]
                     });
                 } else {
-                    return res.send('Server does not exist');
+                    res.status(404);
+                    console.error(err);
+                    res.render('error', {
+                        message: "404, Server not found"
+                    });
                 }
             }
         }

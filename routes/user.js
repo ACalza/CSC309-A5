@@ -107,6 +107,7 @@ router.post('/register', function (req, res, next) {
 
     //Validation (server side so document can't be altered to skip it)
     if (!email || email.length == 0) {
+        res.status(400);
         res.render('register', {
             errorMsg: "Please enter your email",
             fieldStates: req.body
@@ -123,6 +124,7 @@ router.post('/register', function (req, res, next) {
     util.moreThanZero({
         email: email
     }, function () {
+        res.status(500);
         res.render('register', {
             errorMsg: "Database error. Please try again later.",
             fieldStates: req.body
@@ -131,6 +133,7 @@ router.post('/register', function (req, res, next) {
         //Email not registered
         //Further validation
         if (pass != cpass) {
+            res.status(400);
             res.render('register', {
                 errorMsg: "Passwords don't match",
                 fieldStates: req.body
@@ -153,6 +156,7 @@ router.post('/register', function (req, res, next) {
         util.moreThanZero({
             //type: "SAdmin"
         }, function () {
+            res.status(500);
             res.render('register', {
                 errorMsg: "Database error. Please try again later.",
                 fieldStates: req.body
@@ -163,6 +167,7 @@ router.post('/register', function (req, res, next) {
 
             //Save new user
             util.saveModel(u, function (error) {
+                res.status(500);
                 res.render('register', {
                     errorMsg: "Database error. Please try again later.",
                     fieldStates: req.body
@@ -177,6 +182,7 @@ router.post('/register', function (req, res, next) {
 
             //Save new user
             util.saveModel(u, function (error) {
+                res.status(500);
                 res.render('register', {
                     errorMsg: "Database error. Please try again later.",
                     fieldStates: req.body
@@ -189,6 +195,7 @@ router.post('/register', function (req, res, next) {
         });
     }, function () {
         //User found with email
+        res.status(400);
         res.render('register', {
             errorMsg: "This email has already been used.",
             fieldStates: req.body
@@ -226,6 +233,7 @@ router.get('/promote/:id', function (req, res, next) {
             _id: req.params.id
         }, function (err, user) {
             if (err) {
+                res.status(500);
                 res.render('profile', {
                     errorMsg: "Database error"
                 });
@@ -239,6 +247,7 @@ router.get('/promote/:id', function (req, res, next) {
                 //Promote
                 user.type = "Admin";
                 util.saveModel(user, function (error) {
+                    res.status(500);
                     res.render('profile', {
                         user: req.session.curUser,
                         profUser: user,
@@ -286,6 +295,7 @@ router.get('/demote/:id', function (req, res, next) {
                 });
             } else if (user.type == "SAdmin") {
                 //Super admin can't demote self (I guess?)
+                res.status(400);
                 res.render('profile', {
                     user: req.session.curUser,
                     profUser: req.session.curUser,
@@ -295,6 +305,7 @@ router.get('/demote/:id', function (req, res, next) {
                 //Demote and save
                 user.type = "User";
                 util.saveModel(user, function (error) {
+                    res.status(500);
                     res.render('profile', {
                         user: req.session.curUser,
                         profUser: user,
