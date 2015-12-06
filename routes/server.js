@@ -121,7 +121,7 @@ router.get('/comment/list/:server_id', function (req, res, next) {
     req.sanitize('server_id').escape();
     req.sanitize('text').escape();
 
-    if (!req.params.server_id || !req.body.text) {
+    if (!req.params.server_id) {
         res.status(503);
         return res.render('error', {
             message: error503
