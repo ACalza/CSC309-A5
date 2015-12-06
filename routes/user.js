@@ -82,7 +82,7 @@ router.get('/serverlist', function (req, res, next) {
     }
 });
 
-router.get('/:id', function (req, res, next) {
+router.get('/user/:id', function (req, res, next) {
     User.find({
         _id: req.params.id
     }, function (err, user) {
