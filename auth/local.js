@@ -17,6 +17,8 @@ var local = function (router, authCompleteCallback) {
             res.redirect('/profile');
             return;
         }
+        req.sanitize('email').escape();
+        req.sanitize('password').escape();
         var email = req.body.email;
         var pass = req.body.password;
         if (!email || !pass) {
