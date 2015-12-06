@@ -106,6 +106,8 @@ block content
                             textarea.form-control(type="text" name="text" style="width: 500px; height: 150px;")
                             button.btn.btn-primary(type='submit' onclick='setInterval(function(){ window.location.reload(); }, 500)') Comment
              h2.sub-header Comments
+             br
+             br
              .container
                 #comments
           //
@@ -122,10 +124,9 @@ block content
         script(type='text/javascript').
             $.get('/server/comment/list/' + "#{server._id}", function(results){
                 var comments = $("#comments");
-                console.log(results);
                 for (i = 0; i < results.length; i++){
                     var contents = "";
-                    contents += '<div class="row row-centered">';
+                    contents += '<div class="row row-centered" style="background-color: white">';
                     
                    contents += '<div class="col col-md-5">';
                    if (results[i].verified)
@@ -148,6 +149,7 @@ block content
                    contents += '</p></div></div>';
                    
                    contents += '</div>';
+                   contents+= '<br><br>';
                    
                    comments.append(contents);
                 }
