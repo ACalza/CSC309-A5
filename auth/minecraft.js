@@ -16,6 +16,8 @@ var minecraft = function (router, authCompletedCallback) {
             res.redirect('/profile');
             return;
         }
+        req.sanitize('email').escape();
+        req.sanitize('password').escape();
         var email = req.body.email;
         var pass = req.body.password;
         yggdrasilAuthenticate(email, pass, function (resp) {

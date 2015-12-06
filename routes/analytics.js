@@ -10,6 +10,7 @@ router.get('/:id?', function (req, res, next) {
         res.redirect('/user/login');
         return;
     }
+    req.sanitize('id').escape();
     if (req.session.curUser.type.indexOf("Admin") < 0) {
         res.status(403);
         res.render('error', {

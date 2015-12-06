@@ -8,6 +8,8 @@ var serverQuery = require("../lib/server-updater.js");
 var error503 = 'Status 503 server error';
 //create server
 router.post('/create', function (req, res) {
+    req.sanitize('ip').escape();
+    req.sanitize('port').escape();
     if (!req.body.ip) {
         res.render('createServer', {
             error: 'Please enter an IP'
@@ -99,6 +101,8 @@ router.get('/list', function (req, res, next) {
 });
 
 router.get('/comment/list/:server_id', function (req, res, next) {
+    req.sanitize('server_id').escape();
+    req.sanitize('text').escape();
     if (!req.params.server_id || !req.body.text) {
         res.status(503);
         return res.render('error', {
@@ -129,6 +133,8 @@ router.get('/comment/list/:server_id', function (req, res, next) {
 });
 
 router.get('/like/:server_id', function (req, res) {
+    req.sanitize('server_id').escape();
+
     if (!req.session.curUser) {
         res.status(503);
         return res.render('error', {
@@ -188,19 +194,20 @@ router.get('/like/:server_id', function (req, res) {
 })
 
 router.use('/recomendations', function (req, res, next) {
-        ServerDB.find({}, function (err, servers) {
-            if (err) {
-                res.status(503);
-                console.error(err);
-                return res.render('error', {
-                    message: error503
-                });
-            }
-            req.body.servers = servers;
-            next();
-        })
+    ServerDB.find({}, function (err, servers) {
+        if (err) {
+            res.status(503);
+            console.error(err);
+            return res.render('error', {
+                message: error503
+            });
+        }
+        req.body.servers = servers;
+        next();
     })
-    //TODO change to post request?
+})
+
+//TODO change to post request?
 router.get('/recomendations', function (req, res) {
     if (!req.session.curUser) {
         res.status(530);
@@ -208,7 +215,7 @@ router.get('/recomendations', function (req, res) {
             message: "530 error, User not logged in"
         });
     }
-
+    req.sanitize('maxRecomendations').escape();
     var maxRecomendations = req.body.maxRecomendations
     if (maxRecomendations) {
         maxRecomendations = req.session.curUser.likes.length;
@@ -294,6 +301,8 @@ function recomendationRecursion(index, maxRecomendations, req, res) {
 }
 //TODO: Move to router?
 router.post('/comment/add/:server_id', function (req, res, next) {
+    req.sanitize('server_id').escape();
+    req.sanitize('text').escape();
     if (!req.session.curUser) {
         res.status(530);
         return res.render('error', {
@@ -342,6 +351,7 @@ router.post('/comment/add/:server_id', function (req, res, next) {
 });
 
 router.get('/:ip', function (req, res) {
+    req.sanitize('ip').escape();
     ServerDB.find({
         ip: req.params.ip
     }, function (err, result) {
@@ -373,6 +383,8 @@ router.get('/:ip', function (req, res) {
 
 
 router.get('/:ip/:port', function (req, res) {
+    req.sanitize('ip').escape();
+    req.sanitize('port').escape();
     var ip = req.params.ip
     var port = req.params.port
     ServerDB.find({

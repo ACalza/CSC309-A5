@@ -25,7 +25,7 @@ router.get("/view/:id", function (req, res, next) {
         res.redirect('/user/login');
         return;
     }
-
+    req.sanitize('id').escape();
     //If this is our own id, redirect to index
     if (req.params.id == req.session.curUser._id) {
         res.redirect('/profile/');
@@ -67,6 +67,8 @@ router.get('/edit/:id/:command?', function (req, res, next) {
     if (req.session.curUser == null) {
         return res.redirect('/auth/local/login');
     }
+    req.sanitize('id').escape();
+    req.sanitize('command').escape();
     if (req.session.curUser.type.indexOf("Admin") >= 0 || req.session.curUser._id == req.params.id) {
         //May or may not be our own id, we are agnostic
         User.findOne({
@@ -119,7 +121,12 @@ router.post('/edit/:id/:command?', function (req, res, next) {
     if (req.session.curUser == null) {
         return res.redirect('/auth/local/login');
     }
-
+    req.sanitize('id').escape();
+    req.sanitize('command').escape();
+    req.sanitize('displayName').escape();
+    req.sanitize('description').escape();
+    req.sanitize('newpassword').escape(); //Gets hashed but just in case
+    req.sanitize('confirmpassword').escape();
     //Only admin or owner can edit
     if (req.session.curUser.type.indexOf("Admin") >= 0 || req.session.curUser._id == req.params.id) {
         //No command, editing general properties
