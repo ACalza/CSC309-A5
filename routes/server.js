@@ -16,6 +16,12 @@ router.post('/create', function (req, res) {
     if (!req.body.port) {
         req.body.port = 25565;
     }
+    if (req.body.port < 1 || req.body.port > 65535) {
+        res.render('createServer', {
+            error: 'Port must be between 1 and 65534',
+            user: req.session.curUser
+        });
+    }
     ServerDB.count({
         ip: req.body.ip,
         port: req.body.port
