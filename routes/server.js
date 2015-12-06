@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var ServerDB = require('../models/MineCraftServer');
-var Comment = require('../models/comment');
+var ServerDB = require('../models/index').MineCraftServer;
+var Comment = require('../models/index').Comment;
 var User = require('../models/user');
 
 var serverQuery = require("../lib/server-updater.js");
@@ -10,8 +10,7 @@ var error503 = 'Status 503 server error';
 router.post('/create', function (req, res) {
     if (!req.body.ip) {
         res.render('createServer', {
-            error: 'Please enter an IP',
-            user: req.user
+            error: 'Please enter an IP'
         });
     }
     if (!req.body.port) {
@@ -25,10 +24,10 @@ router.post('/create', function (req, res) {
         if (err) {
             res.status(503);
             res.render('createServer', {
-                error: error503,
-                user: req.session.curUser
+                error: error503
             });
-        } else if (result != 0) {
+        }
+        else if (result != 0) {
             res.status(409)
             res.render('createServer', {
                 error: 'Status 409, This server is already registered'
@@ -42,12 +41,6 @@ router.post('/create', function (req, res) {
     });
 });
 
-router.get('/create', function (req, res) {
-    res.render('createServer', {
-        user: req.session.curUser
-    });
-});
-
 
 function create_server(req, res, server) {
     var newServer = new ServerDB({
@@ -58,18 +51,18 @@ function create_server(req, res, server) {
         if (err) {
             res.status(503);
             res.render('error', {
-                message: error503
+                message: err503
             });
         } else {
             serverQuery.updateOneServerModel(newServer, function (err, model) {
                 if (err) {
                     res.status(503);
                     res.render('error', {
-                        message: error503
+                        message: err503
                     });
                 }
                 res.status(200);
-                res.redirect('/' + server.ip + '/' + server.port); //TODO: Redirect to server view
+                res.send("OK"); //TODO: Redirect to server view
             }, 3);
         }
     });
@@ -80,7 +73,7 @@ router.get('/list', function (req, res, next) {
         if (err) {
             res.status(503);
             res.render('error', {
-                message: error503
+                message: err503
             });
         } else {
             res.status(200);
@@ -93,10 +86,10 @@ router.get('/list', function (req, res, next) {
 });
 
 router.get('/comment/list/:server_id', function (req, res, next) {
-    if (!req.params.server_id) {
+    if (!req.params.server_id || !req.body.text) {
         res.status(503);
         return res.render('error', {
-            message: error503
+            message: err503
         });
     }
     ServerDB.findOne({
@@ -105,7 +98,7 @@ router.get('/comment/list/:server_id', function (req, res, next) {
         if (err) {
             res.status(503);
             res.render('error', {
-                message: error503
+                message: err503
             });
         } else if (server == 0) {
             res.status(404)
@@ -126,54 +119,51 @@ router.get('/like/:server_id', function (req, res) {
     if (!req.session.curUser) {
         res.status(503);
         return res.render('error', {
-            message: error503
+            message: err503
         });
     }
     ServerDB.findById(req.params.server_id, function (err, server) {
-            if (err) {
-                res.status(503);
-                res.render('error', {
-                    message: error503
-                });
-            } else if (!server) {
-                res.status(404);
-                console.error(err);
-                res.render('error', {
-                    message: "404, Server not found"
-                });
-            } else {
-                User.findById(req.session.curUser._id, function (err, userModel) {
-                        if (userModel.likes.indexOf(new String(req.params.server_id).valueOf()) !== -1)
-                            res.status(304);
+        if (err) {
+            res.status(503);
+            res.render('error', {
+                message: err503
+            });
+        } else if (!server) {
+            res.status(404);
+            console.error(err);
+            res.render('error', {
+                message: "404, Server not found"
+            });
+        } else {
+
+            User.findById(req.session.curUser._id, function (err, userModel) {
+
+                userModel.likes.push(req.params.server_id);
+                userModel.save(function (err, user) {
+                    if (err) {
+                        res.status(503);
+                        console.error(err);
                         return res.render('error', {
-                            message: "You have already liked this server!"
+                            message: err503
                         });
-                    
-                    userModel.likes.push(req.params.server_id); userModel.save(function (err, user) {
+                    }
+                    server.likes.push(userModel._id);
+                    server.save(function (err, serverModel) {
                         if (err) {
                             res.status(503);
                             console.error(err);
                             return res.render('error', {
-                                message: error503
+                                message: err503
                             });
                         }
-                        server.likes.push(userModel._id);
-                        server.save(function (err, serverModel) {
-                            if (err) {
-                                res.status(503);
-                                console.error(err);
-                                return res.render('error', {
-                                    message: error503
-                                });
-                            }
-                            //Update curUser
-                            req.session.curUser = userModel;
-                            console.log("User " + req.session.curUser.displayName + " liked server " + req.params.server_id);
-                            res.send("User " + req.session.curUser.displayName + " liked server " + req.params.server_id);
-                        })
-
+                        //Update curUser
+                        req.session.curUser = userModel;
+                        console.log("User " + req.session.curUser.displayName + " liked server " + req.params.server_id);
+                        res.send("User " + req.session.curUser.displayName + " liked server " + req.params.server_id);
                     })
+
                 })
+            })
 
         }
     })
@@ -185,7 +175,7 @@ router.use('/recomendations', function (req, res, next) {
                 res.status(503);
                 console.error(err);
                 return res.render('error', {
-                    message: error503
+                    message: err503
                 });
             }
             req.body.servers = servers;
@@ -247,7 +237,7 @@ function recomendationRecursion(index, maxRecomendations, req, res) {
             //go through each server MCQuery issues so ; for nodemon D:
             for (var i = 0; i < req.body.servers.length; i++) {
                 var rank = 0
-                if (curUser.likes.indexOf(new String(req.body.servers[i]._id).valueOf()) !== -1) {
+                if(curUser.likes.indexOf(new String(req.body.servers[i]._id).valueOf()) !== -1) {
                     continue;
                 };
 
