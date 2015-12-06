@@ -10,6 +10,7 @@ var util = require('./util');
 var compress = require('compression');
 var app = express();
 var mongoose = require('mongoose');
+var expressValidator = require('express-validator');
 
 
 // view engine setup
@@ -23,6 +24,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: false
 }));
+app.use(expressValidator());
 app.use(cookieParser());
 app.use(session({
     secret: "secretiohcensecretniye",
@@ -79,11 +81,11 @@ app.use(function (req, res, next) {
 });
 
 //Build all routes
-for(route in routes){
-    if(route !== "/"){
+for (route in routes) {
+    if (route !== "/") {
         console.log("creating route /" + route);
         app.use("/" + route, routes[route]);
-    }else{
+    } else {
         console.log("creating route /");
         app.use(route, routes[route]);
     }

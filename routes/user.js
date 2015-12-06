@@ -98,6 +98,13 @@ router.post('/register', function (req, res, next) {
         res.redirect('/profile');
         return;
     }
+    req.sanitize('email').escape();
+    req.sanitize('password').escape();
+    req.sanitize('displayName').escape();
+    req.sanitize('confirmPassword').escape();
+    req.sanitize('description').escape();
+
+
     //Read form fields
     var email = req.body.email.trim();
     var pass = req.body.password.trim();
@@ -211,21 +218,9 @@ router.get('/logout', function (req, res, next) {
     res.redirect('/');
 });
 
-// Utility function for wiping database.
-router.get('/wipe/', function (req, res, next) {
-    User.remove({},
-        function (err) {
-            if (err)
-                console.error(err);
-            else
-                console.log("Wiped users");
-        });
-    res.redirect('/');
-
-});
-
 // Make a user into an Admin
 router.get('/promote/:id', function (req, res, next) {
+    req.sanitize('id').escape();
     //Only super admin can promote
     if (req.session.curUser.type == "SAdmin") {
         //Find the user
@@ -274,6 +269,7 @@ router.get('/promote/:id', function (req, res, next) {
 
 // Make an admin into a user
 router.get('/demote/:id', function (req, res, next) {
+    req.sanitize('id').escape();
     //Only super admin can demote
     if (req.session.curUser.type == "SAdmin") {
         //Find user
@@ -333,6 +329,7 @@ router.get('/demote/:id', function (req, res, next) {
 
 //Delete user
 router.get('/delete/:id', function (req, res, next) {
+    req.sanitize('id').escape();
     //Only admin+ can delete
     if (req.session.curUser.type.indexOf("Admin") >= 0) {
         //Find user (to validate before deletion)
