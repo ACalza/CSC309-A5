@@ -98,9 +98,7 @@ router.get('/:id', function (req, res, next) {
         } else {
             //User found
             Result = user[0];
-            res.json({
-                result: Result
-            });
+            res.json(Result);
         }
     });
 });
