@@ -29,8 +29,9 @@ app.use(session({
     resave: false,
     saveUninitialized: true
 }));
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(compress());
+app.use(express.static(path.join(__dirname, 'public')));
+
 //=================MY MODULES
 var routes = require('./routes/index');
 var profile = require('./routes/profile');
