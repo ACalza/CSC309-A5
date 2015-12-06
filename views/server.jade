@@ -131,6 +131,7 @@ block content
                    console.log(imgID);
                     $(imgID).attr("src", user.result.img);
                     $(nameID).html(user.result.displayName);
+                    $(nameID).html(user.displayName);
                     });
             }
             $.get('/server/comment/list/' + "#{server._id}", function(results){
