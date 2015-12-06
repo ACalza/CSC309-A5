@@ -69,7 +69,7 @@ function create_server(req, res, server) {
                     });
                 }
                 res.status(200);
-                res.redirect('/' + server.ip + '/' + server.port); //TODO: Redirect to server view
+                res.redirect('/server/' + server.ip + '/' + server.port); //TODO: Redirect to server view
             }, 3);
         }
     });
