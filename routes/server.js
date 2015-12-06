@@ -148,7 +148,7 @@ router.get('/like/:server_id', function (req, res) {
                         return res.render('error', {
                             message: "You have already liked this server!"
                         });
-                    }
+                    
                     userModel.likes.push(req.params.server_id); userModel.save(function (err, user) {
                         if (err) {
                             res.status(503);
