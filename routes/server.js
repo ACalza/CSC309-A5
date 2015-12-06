@@ -80,7 +80,7 @@ router.get('/list', function (req, res, next) {
 });
 
 router.get('/comment/list/:server_id', function (req, res, next) {
-    if (!req.params.server_id || !req.body.text) {
+    if (!req.params.server_id) {
         res.json({
             error: "Server id empty"
         });
