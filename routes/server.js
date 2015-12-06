@@ -26,7 +26,7 @@ router.post('/create', function (req, res) {
             res.status(503);
             res.render('createServer', {
                 error: error503,
-                req.session.curUser
+                user: req.session.curUser
             });
         } else if (result != 0) {
             res.status(409)
@@ -147,7 +147,7 @@ router.get('/like/:server_id', function (req, res) {
                             res.status(304);
                         return res.render('error', {
                             message: "You have already liked this server!"
-                        })
+                        });
                     }
                     userModel.likes.push(req.params.server_id); userModel.save(function (err, user) {
                         if (err) {
