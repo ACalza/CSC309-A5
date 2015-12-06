@@ -1,6 +1,6 @@
 # CSC309-A5
 
-- After installing the required modules by calling “npm install”, run the server with “noje server.js”. You dont have to 
+- After installing the required modules by calling “npm install”, run the server with “node server.js”. You dont have to 
 start the database as it is already running in cloud.
 
 - The server starts listening on the port 3000. Go to your browser and go to the URL "localhost:3000"
