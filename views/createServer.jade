@@ -1,0 +1,18 @@
+extends header
+
+block content
+  .jumbotron.container
+    .row.row-centered
+      if errorMsg
+        div.alert.alert-danger(role='alert')= errorMsg
+      .col.col-centered
+          form(role='form', action='/create/' method='post')
+              .form-group
+                label(for='ip') Display Name:
+                input#ip.form-control(type='text' name='ip')
+                
+              .form-group
+                label(for='port') Port:
+                input#port.form-control(type='text' name='port')
+                
+              button.btn.btn-primary(type='submit') Create Server
