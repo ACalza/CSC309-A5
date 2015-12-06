@@ -353,7 +353,7 @@ router.post('/comment/add/:server_id', function (req, res, next) {
                 poster: req.session.curUser._id,
                 server: server._id,
                 text: req.body.text,
-                displayName: req.session.curUser.displayName,
+                username: req.session.curUser.displayName,
                 verified: req.session.curUser.accountSource == "Minecraft" && server.playerHistory.indexOf(req.session.curUser.displayName) >= 0
             });
             comment.save(function (err) {
