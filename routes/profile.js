@@ -65,8 +65,7 @@ router.get("/view/:id", function (req, res, next) {
 /* GET profile edit page */
 router.get('/edit/:id/:command?', function (req, res, next) {
     if (req.session.curUser == null) {
-        res.redirect('/user/login');
-        return;
+        return res.redirect('/auth/local/login');
     }
     if (req.session.curUser.type.indexOf("Admin") >= 0 || req.session.curUser._id == req.params.id) {
         //May or may not be our own id, we are agnostic
@@ -118,8 +117,7 @@ router.get('/edit/:id/:command?', function (req, res, next) {
 /* POST profile edit page */
 router.post('/edit/:id/:command?', function (req, res, next) {
     if (req.session.curUser == null) {
-        res.redirect('/user/login');
-        return;
+        return res.redirect('/auth/local/login');
     }
 
     //Only admin or owner can edit
