@@ -91,7 +91,7 @@ router.get('/:id', function (req, res, next) {
             res.render('error', {
                 message: error503
             });
-        } else if (user == 0) {
+        } else if (user == []) {
             res.json({
                 error: "User id not found"
             });
