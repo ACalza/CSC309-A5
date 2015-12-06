@@ -20,6 +20,7 @@ var mineCraftServer = mongoose.Schema({
         name: String,
         lastOnline: Date
     }],
+    numLikes: Number,
     likes: [mongoose.Schema.Types.ObjectId]
 });
 
