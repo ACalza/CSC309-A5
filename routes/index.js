@@ -14,7 +14,6 @@ var router = express.Router();
 /* GET home page. */
 router.get('/', function (req, res, next) {
     if (req.session.curUser) {
-
         //List all users
         models.User.find({}, function (err, users) {
             res.render('index', {
