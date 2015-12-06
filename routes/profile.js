@@ -1,7 +1,7 @@
 var express = require('express');
 var crypto = require('crypto');
 var router = express.Router();
-var models = require("../models/index");
+var User = require("../models/user");
 var util = require('../util');
 var error503 = 'Status 503 server error';
 
@@ -32,7 +32,7 @@ router.get("/view/:id", function (req, res, next) {
     } else {
 
         //Not current user, so find them
-        models.User.findOne({
+        User.findOne({
             _id: req.params.id
         }, function (err, user) {
             if (err) {
@@ -69,7 +69,7 @@ router.get('/edit/:id/:command?', function (req, res, next) {
     }
     if (req.session.curUser.type.indexOf("Admin") >= 0 || req.session.curUser._id == req.params.id) {
         //May or may not be our own id, we are agnostic
-        models.User.findOne({
+        User.findOne({
             _id: req.params.id
         }, function (err, user) {
             if (err) {
@@ -126,7 +126,7 @@ router.post('/edit/:id/:command?', function (req, res, next) {
         if (!req.params.command) {
 
             //Find the user (maybe owner maybe not)
-            models.User.findOne({
+            User.findOne({
                 _id: req.params.id
             }, function (err, user) {
                 if (err) {
@@ -208,7 +208,7 @@ router.post('/edit/:id/:command?', function (req, res, next) {
                     });
                 } else {
                     //Password change/fields valid
-                    models.User.findOne({
+                    User.findOne({
                         _id: req.params.id
                     }, function (err, user) {
                         if (err) {

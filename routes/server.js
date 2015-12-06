@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var ServerDB = require('../models/index').MineCraftServer;
-var Comment = require('../models/index').Comment;
+var ServerDB = require('../models/MineCraftServer');
+var Comment = require('../models/comment');
 var User = require('../models/user');
 
 var serverQuery = require("../lib/server-updater.js");
@@ -136,7 +136,7 @@ router.get('/like/:server_id', function (req, res) {
             });
         } else {
             User.findById(req.session.curUser._id, function (err, userModel) {
-                if(userModel.likes.indexOf(new String(req.params.server_id).valueOf()) !== -1){
+                if(userModel.likes.indexOf(new String(req.params.server_id).valueOf()) !== -1)
                     res.status(304);
                     return res.render('error', {
                         message: "You have already liked this server!"

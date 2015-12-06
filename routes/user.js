@@ -3,14 +3,14 @@ var crypto = require('crypto');
 var router = express.Router();
 var util = require('../util');
 var uaparse = require('ua-parser-js');
-var models = require("../models/index");
+var User = require("../models/user");
 
 //NOTE: THIS IS FOR TESTING TEMPLATE ONLY. TY
 router.get('/userlist', function (req, res, next) {
     if (req.session.curUser) {
 
         //List all users
-        models.User.find({}, function (err, users) {
+        User.find({}, function (err, users) {
             res.render('users', {
                 user: req.session.curUser,
                 allUsers: users
@@ -27,7 +27,7 @@ router.get('/serverlist', function (req, res, next) {
     if (req.session.curUser) {
 
         //List all users
-        models.User.find({}, function (err, users) {
+        User.find({}, function (err, users) {
             res.render('servers', {
                 user: req.session.curUser,
                 allUsers: users,
@@ -142,7 +142,7 @@ router.post('/register', function (req, res, next) {
         }
 
         //Create user instance
-        var u = new models.User({
+        var u = new User({
             displayName: displayName,
             email: email,
             password: util.md5hash(pass),
@@ -229,7 +229,7 @@ router.get('/promote/:id', function (req, res, next) {
     //Only super admin can promote
     if (req.session.curUser.type == "SAdmin") {
         //Find the user
-        models.User.findOne({
+        User.findOne({
             _id: req.params.id
         }, function (err, user) {
             if (err) {
@@ -277,7 +277,7 @@ router.get('/demote/:id', function (req, res, next) {
     //Only super admin can demote
     if (req.session.curUser.type == "SAdmin") {
         //Find user
-        models.User.findOne({
+        User.findOne({
             _id: req.params.id
         }, function (err, user) {
             if (err) {
@@ -336,7 +336,7 @@ router.get('/delete/:id', function (req, res, next) {
     //Only admin+ can delete
     if (req.session.curUser.type.indexOf("Admin") >= 0) {
         //Find user (to validate before deletion)
-        models.User.findOne({
+        User.findOne({
             _id: req.params.id
         }, function (err, user) {
             if (err) {
