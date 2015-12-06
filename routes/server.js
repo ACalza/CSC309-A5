@@ -64,7 +64,8 @@ router.get('/create', function (req, res) {
 function create_server(req, res, server) {
     var newServer = new ServerDB({
         ip: server.ip,
-        port: server.port
+        port: server.port,
+        numLikes: 0
     });
 
     serverQuery.updateOneServerModel(newServer, function (err, model) {

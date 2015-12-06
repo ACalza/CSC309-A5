@@ -82,6 +82,29 @@ router.get('/serverlist', function (req, res, next) {
     }
 });
 
+router.get('/:id', function (req, res, next) {
+    User.find({
+        _id: req.params.id
+    }, function (err, user) {
+        if (err) {
+            res.status(503);
+            res.render('error', {
+                message: error503
+            });
+        } else if (user == 0) {
+            res.json({
+                error: "User id not found"
+            });
+        } else {
+            //User found
+            Result = user[0];
+            res.json({
+                result: Result
+            });
+        }
+    });
+});
+
 
 /* GET register */
 router.get('/register', function (req, res, next) {
