@@ -119,17 +119,17 @@ block content
                     var contents = "";
                     contents += '<div class="row row-centered">';
                     
-                   contents += '<div class="col col-md-8">';
+                   contents += '<div class="col col-md-5">';
                    
                    if (results[i].verified)
                     contents += '<p color="green">';
                    else
                     contents += '<p>';
-                   contents += "Name";
+                   contents += results[i].username;
                    contents += '</p></div>';
                    
-                   contents += '<div class="col col-md-4"><p>';
-                   contents += "Date Posted:";
+                   contents += '<div class="col col-md-7"><p>';
+                   contents += "Date Posted: " + results[i].date;
                    contents += '</p></div>';
                    
                    contents += '<div class="row row-centered">';
