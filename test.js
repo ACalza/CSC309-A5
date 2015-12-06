@@ -36,7 +36,7 @@ describe("Backend Tests on /profile/", function() {
 		server.close();
 	});
 
-    it('/edit should redirect to login page', function(done) {
+    it('/edit should return a 302 not logged in error', function(done) {
         http.get('http://127.0.0.1:3000/profile/edit/asdf', function(response) {
             //Should be 302 since not logged in
             assert.equal(response.statusCode, 302);

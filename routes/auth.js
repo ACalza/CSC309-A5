@@ -1,7 +1,7 @@
 var express = require('express');
 var crypto = require('crypto');
 var router = express.Router();
-var models = require("../models/index");
+var User = require("../models/user");
 var util = require('../util');
 var googleAuth = require('../auth/google');
 var localAuth = require('../auth/local');
@@ -36,7 +36,7 @@ function minecraftAuthComplete(data, req, res, next) {
 }
 
 function thirdPartyAuthComplete(email, displayName, picture, access_token, auth_service, req, res, next) {
-    models.User.findOne({
+    User.findOne({
         email: email
     }, function (err, user) {
         if (err) {
@@ -59,7 +59,7 @@ function thirdPartyAuthComplete(email, displayName, picture, access_token, auth_
                 }
             } else {
                 //We need to make a new user, based on the third-party auth
-                u = new models.User({
+                u = new User({
                     displayName: displayName,
                     email: email,
                     type: "User",
