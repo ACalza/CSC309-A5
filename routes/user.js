@@ -4,6 +4,7 @@ var router = express.Router();
 var util = require('../util');
 var uaparse = require('ua-parser-js');
 var User = require("../models/user");
+var error503 = "Status 503, internal server error";
 
 //NOTE: THIS IS FOR TESTING TEMPLATE ONLY. TY
 router.get('/userlist', function (req, res, next) {
@@ -82,12 +83,13 @@ router.get('/serverlist', function (req, res, next) {
     }
 });
 
-router.get('/:id', function (req, res, next) {
+router.get('find/:id', function (req, res, next) {
     User.find({
         _id: req.params.id
     }, function (err, user) {
         if (err) {
             res.status(503);
+            console.error(err);
             res.render('error', {
                 message: error503
             });
@@ -173,7 +175,7 @@ router.post('/register', function (req, res, next) {
         var u = new User({
             displayName: displayName,
             email: email,
-            password: util.md5hash(pass),
+            password: util.bcrypt(util.md5hash(pass)),
             type: "User",
             img: "http://gravatar.com/avatar/" + util.md5hash(email),
             description: description,
