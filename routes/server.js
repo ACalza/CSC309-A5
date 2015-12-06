@@ -51,14 +51,14 @@ function create_server(req, res, server) {
         if (err) {
             res.status(503);
             res.render('error', {
-                message: err503
+                message: error503
             });
         } else {
             serverQuery.updateOneServerModel(newServer, function (err, model) {
                 if (err) {
                     res.status(503);
                     res.render('error', {
-                        message: err503
+                        message: error503
                     });
                 }
                 res.status(200);
@@ -73,7 +73,7 @@ router.get('/list', function (req, res, next) {
         if (err) {
             res.status(503);
             res.render('error', {
-                message: err503
+                message: error503
             });
         } else {
             res.status(200);
@@ -89,7 +89,7 @@ router.get('/comment/list/:server_id', function (req, res, next) {
     if (!req.params.server_id || !req.body.text) {
         res.status(503);
         return res.render('error', {
-            message: err503
+            message: error503
         });
     }
     ServerDB.findOne({
@@ -98,7 +98,7 @@ router.get('/comment/list/:server_id', function (req, res, next) {
         if (err) {
             res.status(503);
             res.render('error', {
-                message: err503
+                message: error503
             });
         } else if (server == 0) {
             res.status(404)
@@ -119,14 +119,14 @@ router.get('/like/:server_id', function (req, res) {
     if (!req.session.curUser) {
         res.status(503);
         return res.render('error', {
-            message: err503
+            message: error503
         });
     }
     ServerDB.findById(req.params.server_id, function (err, server) {
         if (err) {
             res.status(503);
             res.render('error', {
-                message: err503
+                message: error503
             });
         } else if (!server) {
             res.status(404);
@@ -149,7 +149,7 @@ router.get('/like/:server_id', function (req, res) {
                         res.status(503);
                         console.error(err);
                         return res.render('error', {
-                            message: err503
+                            message: error503
                         });
                     }
                     server.likes.push(userModel._id);
@@ -158,7 +158,7 @@ router.get('/like/:server_id', function (req, res) {
                             res.status(503);
                             console.error(err);
                             return res.render('error', {
-                                message: err503
+                                message: error503
                             });
                         }
                         //Update curUser
@@ -180,7 +180,7 @@ router.use('/recomendations', function (req, res, next) {
                 res.status(503);
                 console.error(err);
                 return res.render('error', {
-                    message: err503
+                    message: error503
                 });
             }
             req.body.servers = servers;
