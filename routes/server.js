@@ -9,7 +9,7 @@ var error503 = 'Status 503 server error';
 //create server
 router.post('/create', function (req, res) {
     if (!req.body.ip) {
-        res.render('createServer', {
+        return res.render('createServer', {
             error: 'Please enter an IP'
         });
     }
@@ -17,7 +17,7 @@ router.post('/create', function (req, res) {
         req.body.port = 25565;
     }
     if (req.body.port < 1 || req.body.port > 65535) {
-        res.render('createServer', {
+        return res.render('createServer', {
             error: 'Port must be between 1 and 65534',
             user: req.session.curUser
         });
