@@ -290,7 +290,7 @@ function recomendationRecursion(index, maxRecomendations, req, res) {
             //go through each server MCQuery issues so ; for nodemon D:
             for (var i = 0; i < req.body.servers.length; i++) {
                 var rank = 0
-                if(!req.body.servers[i]){
+                if(!req.body.servers[i] || !server){
                     continue;
                 }
                 if (curUser.likes.indexOf(new String(req.body.servers[i]._id).valueOf()) !== -1) {
@@ -298,6 +298,7 @@ function recomendationRecursion(index, maxRecomendations, req, res) {
                 }
 
                 req.body.servers[i].plugins.forEach(function (plugin) {
+
                     if (server.plugins.indexOf(plugin) !== -1) {
                         rank += 1;
                     }
