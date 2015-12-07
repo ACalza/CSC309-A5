@@ -248,7 +248,6 @@ router.get('/recomendations', function (req, res) {
 function filterAndSort(req, res) {
     var serverRecomendations = [];
     //Classic n^2 algoirthm
-    console.log(req.body.possibleServers)
     for (server in req.body.possibleServers) {
 
         var max = req.body.possibleServers[server];
@@ -291,9 +290,12 @@ function recomendationRecursion(index, maxRecomendations, req, res) {
             //go through each server MCQuery issues so ; for nodemon D:
             for (var i = 0; i < req.body.servers.length; i++) {
                 var rank = 0
+                if(!req.body.server[i]){
+                    continue;
+                }
                 if (curUser.likes.indexOf(new String(req.body.servers[i]._id).valueOf()) !== -1) {
                     continue;
-                };
+                }
 
                 req.body.servers[i].plugins.forEach(function (plugin) {
                     if (server.plugins.indexOf(plugin) !== -1) {
@@ -339,7 +341,6 @@ router.get('/delete/:server_id', function (req, res) {
             ServerDB.findOne({
                 _id: req.params.server_id
             }, function (err, server) {
-                console.log(server);
                 if (err) {
                     res.status(503);
                     res.render('error', {
@@ -357,8 +358,9 @@ router.get('/delete/:server_id', function (req, res) {
                             return res.render('error', {
                                 message: "Status 503 Server error"
                             })
-                            return res.redirect("/server/list");
                         }
+                        console.log("Deleted");
+                        return res.redirect("/server/list");
                     })
                 }
             });
