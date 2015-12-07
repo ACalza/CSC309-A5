@@ -6,7 +6,7 @@ block append extraHeader
     //script(src='/javascripts/sortable.min.js')
     script(src='https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js')
         
-mixin server(title, map, gameMode, curr_players, max_players, ip, port)  
+mixin server(title, map, gameMode, curr_players, max_players, ip, port)
     tr
         td
            a.colorless-link(href="/server/" + ip + "/" + port)=title
@@ -18,8 +18,6 @@ mixin server(title, map, gameMode, curr_players, max_players, ip, port)
 //NOTE: ACTUAL CONTENTS WILL CHANGE.
 block content
     .container
-        //This is reserved for important stuff, like search bar and filters
-        p Search parameters
     .container
         table#myTable.table.display
             thead
