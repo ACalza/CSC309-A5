@@ -290,7 +290,7 @@ function recomendationRecursion(index, maxRecomendations, req, res) {
             //go through each server MCQuery issues so ; for nodemon D:
             for (var i = 0; i < req.body.servers.length; i++) {
                 var rank = 0
-                if(!req.body.server[i]){
+                if(!req.body.servers[i]){
                     continue;
                 }
                 if (curUser.likes.indexOf(new String(req.body.servers[i]._id).valueOf()) !== -1) {
