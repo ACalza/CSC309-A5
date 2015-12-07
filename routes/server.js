@@ -265,7 +265,7 @@ function filterAndSort(req, res) {
     }
     //console.log(serverRecomendations);
 
-    return res.send(JSON.stringify(serverRecomendations));
+    return res.json(serverRecomendations);
 }
 /**
  * Adds and creates recomendations for the user
