@@ -191,7 +191,8 @@ router.get('/like/:server_id', function (req, res) {
                         //Update curUser
                         req.session.curUser = userModel;
                         console.log("User " + req.session.curUser.displayName + " liked server " + req.params.server_id);
-                        res.send("User " + req.session.curUser.displayName + " liked server " + req.params.server_id);
+                        //res.send("User " + req.session.curUser.displayName + " liked server " + req.params.server_id);
+                        res.redirect('/server/' + server._id);
                     })
 
                 })
@@ -323,50 +324,50 @@ function recomendationRecursion(index, maxRecomendations, req, res) {
     }
 }
 //deleteroute
-router.get('/delete/:server_id', function(req, res){
+router.get('/delete/:server_id', function (req, res) {
 
-    if (!req.session.curUser) {
-        res.status(530);
-        return res.render('error', {
-            message: "530 error, User not logged in"
-        });
-    }else if(req.session.curUser.type === "Admin" || req.session.curUser.type === "SAdmin"){
-        ServerDB.findOne({
-            _id: req.params.server_id
-        }, function (err, server) {
-            console.log(server);
-            if (err) {
-                res.status(503);
-                res.render('error', {
-                    message: error503
-                });
-            } else if (!server) {
-                res.status(404);
-                res.render('error', {
-                    message: "Server id not found"
-                });
-            } else {
-                server.remove(function(err){
-                    if(err){
-                        res.status(503)
-                        return res.render('error', {
-                            message: "Status 503 Server error"
-                        })
-                    return res.redirect("/server/list");
-                    }
-                })
-            }
-        });
-    }else{
-        res.status(403)
-        return res.render('error', {
-            message: "403 forbidden"
-        });
-    }
+        if (!req.session.curUser) {
+            res.status(530);
+            return res.render('error', {
+                message: "530 error, User not logged in"
+            });
+        } else if (req.session.curUser.type === "Admin" || req.session.curUser.type === "SAdmin") {
+            ServerDB.findOne({
+                _id: req.params.server_id
+            }, function (err, server) {
+                console.log(server);
+                if (err) {
+                    res.status(503);
+                    res.render('error', {
+                        message: error503
+                    });
+                } else if (!server) {
+                    res.status(404);
+                    res.render('error', {
+                        message: "Server id not found"
+                    });
+                } else {
+                    server.remove(function (err) {
+                        if (err) {
+                            res.status(503)
+                            return res.render('error', {
+                                message: "Status 503 Server error"
+                            })
+                            return res.redirect("/server/list");
+                        }
+                    })
+                }
+            });
+        } else {
+            res.status(403)
+            return res.render('error', {
+                message: "403 forbidden"
+            });
+        }
 
 
-})
-//Comment add to a server object ID
+    })
+    //Comment add to a server object ID
 router.post('/comment/add/:server_id', function (req, res, next) {
     req.sanitize('server_id').escape();
     req.sanitize('text').escape();
