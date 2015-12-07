@@ -82,10 +82,7 @@ router.get('/serverlist', function (req, res, next) {
     }
 });
 
-<< << << < HEAD
-    === === =
-    //Find a user by mongo.objectID and return the JSON of the model
-    >>> >>> > dc8a6dba1cc3ad148831b2c35b8a493dc03727d1
+//Find a user by mongo.objectID and return the JSON of the model
 router.get('/find/:id', function (req, res, next) {
     User.find({
         _id: req.params.id
