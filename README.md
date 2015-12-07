@@ -33,3 +33,5 @@ username written on it.
 - Admins can see more detailed information about the users, such as the device they logged in from, their login locations and times, their ips, and pages users visit.
 
 - The website is accessible at: https://infinite-cove-8574.herokuapp.com/
+
+- Our video can be found at https://youtu.be/1PVSkfkBR9E
