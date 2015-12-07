@@ -248,11 +248,10 @@ router.get('/recomendations', function (req, res) {
 function filterAndSort(req, res) {
     var serverRecomendations = [];
     //Classic n^2 algoirthm
-
+    console.log(req.body.possibleServers)
     for (server in req.body.possibleServers) {
-        console.log(server);
-        var max = req.body.possibleServers[server];
 
+        var max = req.body.possibleServers[server];
         for (possibleMax in req.body.possibleServers) {
             if (req.body.possibleServers[possibleMax] > max) {
                 max = req.body.possibleServers[possibleMax];
@@ -264,7 +263,7 @@ function filterAndSort(req, res) {
             server: max.server
         });
     }
-    console.log(serverRecomendations);
+    //console.log(serverRecomendations);
 
     return res.send(JSON.stringify(serverRecomendations));
 }
@@ -319,10 +318,9 @@ function recomendationRecursion(index, maxRecomendations, req, res) {
                 } else {
                     req.body.possibleServers[req.body.servers[i]._id] = {
                         "rank": rank,
-                        "server": server
+                        "server": req.body.servers[i]
                     };
                 }
-                //I'm getting weird bugs if I dont add ; "challenge token" from mcquery crashes
             }
 
             recomendationRecursion(index + 1, maxRecomendations, req, res);
