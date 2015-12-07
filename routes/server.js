@@ -259,7 +259,7 @@ function filterAndSort(req, res) {
     }
 
 
-    return res.send(req.body.possibleServers);
+    return res.send(serverRecomendations);
 }
 /**
  * Adds and creates recomendations for the user
