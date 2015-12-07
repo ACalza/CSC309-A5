@@ -23,7 +23,7 @@ block content
                     h2.page-header Liked!
                 else
                     
-      if user.type == "SAdmin" || user.type == "Admin"
+      if user && user.type == "SAdmin" || user.type == "Admin"
         .row
             a(style="color: red" href="/server/delete/" + server._id)
                 h4.page-header Delete
