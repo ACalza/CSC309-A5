@@ -83,12 +83,12 @@ block content
             content+= "<tbody>";
             for (i = 0; i < servers.length; i++){
                 content += "<tr>";
-                content += "<td><a class='colorless-link' href='/server/" + servers[i].ip + "/" + servers[i].port + "'>" +  + servers[i].title + "</a></td>";
+                content += "<td><a class='colorless-link' href='/server/" + servers[i].ip + "/" + servers[i].port + "'>" + servers[i].title + "</a></td>";
                 content += "<td>" + servers[i].map + "</td>";
                 content += "<td>" + servers[i].gameMode + "</td>";
                 content += "<td>" + servers[i].curr_players + "/" + servers[i].max_players + "</td>";
                 content += "<td>" + servers[i].ip + ":" + servers[i].port + "</td>";
-                content+= "</tr>";
+                content += "</tr>";
             }
             
             content+= "</tbody>";
@@ -97,4 +97,4 @@ block content
             $('#recomendations').html(content);
         
 
-            });
+            });});
