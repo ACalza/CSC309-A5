@@ -248,7 +248,9 @@ router.get('/recomendations', function (req, res) {
 function filterAndSort(req, res) {
     var serverRecomendations = [];
     //Classic n^2 algoirthm
+
     for (server in req.body.possibleServers) {
+        console.log(server);
         var max = req.body.possibleServers[server];
 
         for (possibleMax in req.body.possibleServers) {
@@ -256,11 +258,16 @@ function filterAndSort(req, res) {
                 max = req.body.possibleServers[possibleMax];
             }
         }
-        serverRecomendations.push(serverRecomendations);
+        //console.log(req.body.possibleServers[server])
+        serverRecomendations.push({
+            rank: req.body.possibleServers[server].rank,
+            ip: req.body.possibleServers[server].server.ip,
+            port: req.body.possibleServers[server].server.port
+        });
     }
+    console.log(serverRecomendations);
 
-
-    return res.send(serverRecomendations);
+    return res.send(JSON.stringify(serverRecomendations));
 }
 /**
  * Adds and creates recomendations for the user
