@@ -75,8 +75,9 @@ block content
         script(type='text/javascript').
             $(document).ready(function(){
             //fill recommendation
-            $.get('/server/recomendations', function(servers){
-                console.log(servers);
+            $.get('/server/recomendations', function(serversStr){
+                console.log(serversStr);
+                servers = jQuery.parseJSON(serversStr);
                 //if (servers.length == 0) return;
 
                 content = "";
@@ -89,11 +90,11 @@ block content
                 content+= "<tbody>";
                 for (i = 0; i < servers.length; i++){
                     content += "<tr>";
-                    content += "<td><a class='colorless-link' href='/server/" + servers[i].ip + "/" + servers[i].port + "'>" + servers[i].title + "</a></td>";
-                    content += "<td>" + servers[i].map + "</td>";
-                    content += "<td>" + servers[i].gameMode + "</td>";
-                    content += "<td>" + servers[i].curr_players + "/" + servers[i].max_players + "</td>";
-                    content += "<td>" + servers[i].ip + ":" + servers[i].port + "</td>";
+                    content += "<td><a class='colorless-link' href='/server/" + servers[i].server.ip + "/" + servers[i].server.port + "'>" + servers[i].server.title + "</a></td>";
+                    content += "<td>" + servers[i].server.map + "</td>";
+                    content += "<td>" + servers[i].server.gameMode + "</td>";
+                    content += "<td>" + servers[i].server.numPlayersOnline + "/" + servers[i].server.maxPlayers + "</td>";
+                    content += "<td>" + servers[i].server.ip + ":" + servers[i].server.port + "</td>";
                     content += "</tr>";
                 }
 
