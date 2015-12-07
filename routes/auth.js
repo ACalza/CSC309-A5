@@ -13,13 +13,23 @@ googleAuth(router, googleAuthComplete);
 localAuth(router, authComplete);
 minecraftAuth(router, minecraftAuthComplete);
 
+/**
+ * authentication for user
+ * @param  model user - user model
+ * @param  req  - request object
+ * @param  res  - response object
+ * @param  {Function} next [description]
+ * @return {[type]}        [description]
+ */
 function authComplete(user, req, res, next) {
     if (!req.session.curUser)
         user = updateUserAnalytics(user, req);
 
     util.saveModel(user, function (err) {
         console.log(err);
-        //TODO: Show error
+        res.render("error", {
+            message: "Message 503"
+        })
     }, function (user) {
         req.session.curUser = user;
         res.redirect('/profile');

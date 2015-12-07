@@ -1,4 +1,5 @@
 var crypto = require("crypto");
+var bcrypt = require("bcrypt");
 var models = require("./models/index");
 
 var util = {
@@ -55,8 +56,12 @@ var util = {
 
     },
 
-
-
+    /**
+     * encrypts the password using becrpt
+     */
+    bcrypt: function(password){
+        return bcrypt.hashSync(password, 8);
+    },
     // Checks if there is at least one user matching params. If there is calls gtz (greaterThanZero).
     // Otherwise calls zero. If an error occurs calls error with the error as a parameter.
     moreThanZero: function (params, error, zero, gtz) {
