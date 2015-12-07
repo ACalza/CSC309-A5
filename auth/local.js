@@ -32,12 +32,18 @@ var local = function (router, authCompleteCallback) {
         models.User.findOne({
             email: email
         }, function (err, user) {
+            if(!user){
+                res.status(535)
+                return res.render('login', {
+                    errorMsg: "Sorry, wrong email/password."
+                });
+            }
             var hash = user.password;
-            if (user && bcrypt.compareSync(util.md5hash(req.body.password), hash)){
+            if (bcrypt.compareSync(util.md5hash(req.body.password), hash)){
                 authCompleteCallback(user, req, res, next);
-            } else {
-                //No match - wrong email or password
-                res.render('login', {
+            }else{
+                res.status(535)
+                return res.render('login', {
                     errorMsg: "Sorry, wrong email/password."
                 });
             }
