@@ -39,46 +39,46 @@ var profile = require('./routes/profile');
 var user = require('./routes/user');
 var analytics = require('./routes/analytics');
 
-app.use(function (req, res, next) {
-    //Analytics hook for tracking user activity.
-    if (req.session.curUser) {
-        //Verify that the user has not been deleted
-        util.moreThanZero({
-            _id: req.session.curUser._id
-        }, function (err) {
-            res.status(500);
-            res.render('error', {
-                message: err.message,
-                error: err
-            });
-        }, function () {
-            req.session.curUser = null;
-            next();
-        }, function () {
-            var indexOfPage = req.session.curUser.pages.indexOf(req.path);
-            if (indexOfPage < 0) {
-                req.session.curUser.pages.push(req.path);
-                req.session.curUser.pageVisits.push(1);
-            } else {
-                req.session.curUser.pageVisits[indexOfPage] = req.session.curUser.pageVisits[indexOfPage] + 1;
-            }
-
-            util.saveModel(req.session.curUser, function (err) {
-                res.status(err.status || 500);
-                res.render('error', {
-                    message: err.message,
-                    error: err
-                });
-                console.log(err);
-            }, function (user) {
-                next();
-            });
-        });
-    } else {
-        next();
-    }
-
-});
+//app.use(function (req, res, next) {
+//    //Analytics hook for tracking user activity.
+//    if (req.session.curUser) {
+//        //Verify that the user has not been deleted
+//        util.moreThanZero({
+//            _id: req.session.curUser._id
+//        }, function (err) {
+//            res.status(500);
+//            res.render('error', {
+//                message: err.message,
+//                error: err
+//            });
+//        }, function () {
+//            req.session.curUser = null;
+//            next();
+//        }, function () {
+//            var indexOfPage = req.session.curUser.pages.indexOf(req.path);
+//            if (indexOfPage < 0) {
+//                req.session.curUser.pages.push(req.path);
+//                req.session.curUser.pageVisits.push(1);
+//            } else {
+//                req.session.curUser.pageVisits[indexOfPage] = req.session.curUser.pageVisits[indexOfPage] + 1;
+//            }
+//
+//            util.saveModel(req.session.curUser, function (err) {
+//                res.status(err.status || 500);
+//                res.render('error', {
+//                    message: err.message,
+//                    error: err
+//                });
+//                console.log(err);
+//            }, function (user) {
+//                next();
+//            });
+//        });
+//    } else {
+//        next();
+//    }
+//
+//});
 
 //Build all routes
 for (route in routes) {

@@ -84,7 +84,8 @@ router.get('/serverlist', function (req, res, next) {
 
 //Find a user by mongo.objectID and return the JSON of the model
 router.get('/find/:id', function (req, res, next) {
-    User.find({
+    req.sanitize('id').escape();
+    User.findOne({
         _id: req.params.id
     }, function (err, user) {
         if (err) {
@@ -93,13 +94,13 @@ router.get('/find/:id', function (req, res, next) {
             res.render('error', {
                 message: error503
             });
-        } else if (user == []) {
+        } else if (!user) {
             res.json({
                 error: "User id not found"
             });
         } else {
             //User found
-            Result = user[0];
+            Result = user;
             res.json(Result);
         }
     });
