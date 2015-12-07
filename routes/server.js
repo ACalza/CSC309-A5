@@ -290,9 +290,12 @@ function recomendationRecursion(index, maxRecomendations, req, res) {
             //go through each server MCQuery issues so ; for nodemon D:
             for (var i = 0; i < req.body.servers.length; i++) {
                 var rank = 0
+                if(!req.body.server[i]){
+                    continue;
+                }
                 if (curUser.likes.indexOf(new String(req.body.servers[i]._id).valueOf()) !== -1) {
                     continue;
-                };
+                }
 
                 req.body.servers[i].plugins.forEach(function (plugin) {
                     if (server.plugins.indexOf(plugin) !== -1) {
@@ -354,7 +357,7 @@ router.get('/delete/:server_id', function (req, res) {
                             res.status(503)
                             return res.render('error', {
                                 message: "Status 503 Server error"
-                            })        
+                            })
                         }
                         console.log("Deleted");
                         return res.redirect("/server/list");
