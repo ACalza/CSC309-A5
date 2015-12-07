@@ -31,3 +31,5 @@ username written on it.
 - If you log in as an admin, you can delete servers, see user information, and promote users. Only the superadmin can demote users.
 
 - Admins can see more detailed information about the users, such as the device they logged in from, their login locations and times, their ips, and pages users visit.
+
+- The website is accessible at: https://infinite-cove-8574.herokuapp.com/
