@@ -13,10 +13,14 @@ block content
           .col-md-6
             h1.page-header=server.title + ' (' + server.ip + ':' + server.port + ')'
           .col-md-4
-            h2.page-header="Likes: " + server.numLikes 
+            h2.page-header="Likes: " + server.likes.length
           .col-md-2
             a
-                h2.page-header="Like!"
+                if (server.likes.indexOf(user._id) == -1)
+                    h2.page-header Liked
+                else
+                    h2.page-header
+                        a#like(href="/server/like/" + server._id) Like!
           //.col-md-3
             h1 things
       .row.placeholders
