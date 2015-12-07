@@ -25,3 +25,7 @@ server information and create a page for it. If the port is not entered, it sets
 
 - Once you are done creating/viewing servers, you can logout from the drop down menu at the upper right corner with your
 username written on it.
+
+- If you log in as an admin, you can delete servers, see user information, and promote users. Only the superadmin can demote users.
+
+- Admins can see more detailed information about the users, such as the device they logged in from, their login locations and times, their ips, and pages users visit.
