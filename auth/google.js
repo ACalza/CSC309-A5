@@ -4,7 +4,7 @@ var oauth2api = googleapis.oauth2("v2");
 
 var CLIENT_ID = "17988975914-scs97inbdpksm5ivb4mrqeovfooa847j.apps.googleusercontent.com";
 var CLIENT_SECRET = "wvL5DlJWpM8Ox4Zl80xet00L";
-var REDIRECT_URL = "http://localhost:3000/auth/google/authcallback";
+var REDIRECT_URL = "http://infinite-cove-8574.herokuapp.com/auth/google/authcallback";
 
 var oauth2Client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URL);
 
