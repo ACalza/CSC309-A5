@@ -192,7 +192,7 @@ router.get('/like/:server_id', function (req, res) {
                         req.session.curUser = userModel;
                         console.log("User " + req.session.curUser.displayName + " liked server " + req.params.server_id);
                         //res.send("User " + req.session.curUser.displayName + " liked server " + req.params.server_id);
-                        res.redirect('/server/' + server._id);
+                        return res.redirect('/server/' + serverModel.ip + '/' +serverModel.port);
                     })
 
                 })
