@@ -17,8 +17,9 @@ mixin server(title, map, gameMode, curr_players, max_players, ip, port)
 
 //NOTE: ACTUAL CONTENTS WILL CHANGE.
 block content
-    .container
-        table.table#recomendations
+    if user
+        .container
+            table.table#recomendations
     .container
         table#myTable.table.display
             thead
@@ -68,33 +69,38 @@ block content
                 window.location = href;
             }
         });
-        //fill recommendation
-        $.get('/server/recomendations', function(servers){
-            console.log(servers);
-            //if (servers.length == 0) return;
-            
-            content = "";
-            
-            content += "<thead><tr>";
-            content += "<th> Title </th><th>Map</th><th>Game Mode</th><th>Players</th><th>IP:Port</th>";
-            
-            content += "</tr></thead>";
-            
-            content+= "<tbody>";
-            for (i = 0; i < servers.length; i++){
-                content += "<tr>";
-                content += "<td><a class='colorless-link' href='/server/" + servers[i].ip + "/" + servers[i].port + "'>" + servers[i].title + "</a></td>";
-                content += "<td>" + servers[i].map + "</td>";
-                content += "<td>" + servers[i].gameMode + "</td>";
-                content += "<td>" + servers[i].curr_players + "/" + servers[i].max_players + "</td>";
-                content += "<td>" + servers[i].ip + ":" + servers[i].port + "</td>";
-                content += "</tr>";
-            }
-            
-            content+= "</tbody>";
+        });
         
-        
-            $('#recomendations').html(content);
-        
+    if user
+        script(type='text/javascript').
+            $(document).ready(function(){
+            //fill recommendation
+            $.get('/server/recomendations', function(servers){
+                console.log(servers);
+                //if (servers.length == 0) return;
 
-            });});
+                content = "";
+
+                content += "<thead><tr>";
+                content += "<th> Title </th><th>Map</th><th>Game Mode</th><th>Players</th><th>IP:Port</th>";
+
+                content += "</tr></thead>";
+
+                content+= "<tbody>";
+                for (i = 0; i < servers.length; i++){
+                    content += "<tr>";
+                    content += "<td><a class='colorless-link' href='/server/" + servers[i].ip + "/" + servers[i].port + "'>" + servers[i].title + "</a></td>";
+                    content += "<td>" + servers[i].map + "</td>";
+                    content += "<td>" + servers[i].gameMode + "</td>";
+                    content += "<td>" + servers[i].curr_players + "/" + servers[i].max_players + "</td>";
+                    content += "<td>" + servers[i].ip + ":" + servers[i].port + "</td>";
+                    content += "</tr>";
+                }
+
+                content+= "</tbody>";
+
+
+                $('#recomendations').html(content);
+
+
+                });});
