@@ -75,9 +75,8 @@ block content
         script(type='text/javascript').
             $(document).ready(function(){
             //fill recommendation
-            $.get('/server/recomendations', function(serversStr){
-                console.log(serversStr);
-                servers = jQuery.parseJSON(serversStr);
+            $.get('/server/recomendations', function(servers){
+                console.log(servers);
                 //if (servers.length == 0) return;
 
                 content = "";
