@@ -16,7 +16,11 @@ block content
             h2.page-header="Likes: " + server.likes.length
           .col-md-2
             a
-                h2.page-header="Like!"
+                if (server.likes.indexOf(user._id) == -1)
+                    h2.page-header Liked
+                else
+                    h2.page-header
+                        a#like(href="/server/like/" + server._id) Like!
           //.col-md-3
             h1 things
       .row.placeholders
