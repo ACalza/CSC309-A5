@@ -7,7 +7,6 @@ var serverQuery = require("../lib/server-updater");
 
 var error503 = 'Status 503 server error';
 //create server
-
 router.post('/create', function (req, res) {
     req.sanitize('ip').escape();
     req.sanitize('port').escape();
@@ -50,6 +49,7 @@ router.post('/create', function (req, res) {
     });
 });
 
+//Get request to create server if user types /create (redirect)
 router.get('/create', function (req, res) {
     if (req.session.curUser) {
         res.render('createServer', {
@@ -60,7 +60,13 @@ router.get('/create', function (req, res) {
     }
 })
 
-
+/**
+ * creates a server given the server JSON
+ * @param  req  - request object
+ * @param  res  - response object
+ * @param  server - JSON of server information
+ * @return void
+ */
 function create_server(req, res, server) {
     var newServer = new ServerDB({
         ip: server.ip,
@@ -84,7 +90,7 @@ function create_server(req, res, server) {
 
 
 }
-
+//List all the servers
 router.get('/list', function (req, res, next) {
     ServerDB.find({}, function (err, result) {
         if (err) {
@@ -212,7 +218,7 @@ router.use('/recomendations', function (req, res, next) {
 })
 
 
-//TODO change to post request?
+//Get recomendations for user
 router.get('/recomendations', function (req, res) {
     if (!req.session.curUser) {
         res.status(530);
@@ -233,6 +239,12 @@ router.get('/recomendations', function (req, res) {
 
 })
 
+/**
+ * Filter and sorts the recomendations by score
+ * @param  req  - request object
+ * @param  res  - response object
+ * @return void
+ */
 function filterAndSort(req, res) {
     var serverRecomendations = [];
     //Classic n^2 algoirthm
@@ -250,7 +262,14 @@ function filterAndSort(req, res) {
 
     return res.send(req.body.possibleServers);
 }
-
+/**
+ * Adds and creates recomendations for the user
+ * @param  int index - current index recursion
+ * @param  int  maxRecomendations
+ * @param  req  - request object
+ * @param  res  - response object
+ * @return void
+ */
 function recomendationRecursion(index, maxRecomendations, req, res) {
     var curUser = req.session.curUser;
 
@@ -304,8 +323,8 @@ function recomendationRecursion(index, maxRecomendations, req, res) {
         })
     }
 }
-//TODO: Move to router?
 
+//Comment add to a server object ID
 router.post('/comment/add/:server_id', function (req, res, next) {
     req.sanitize('server_id').escape();
     req.sanitize('text').escape();
@@ -355,7 +374,7 @@ router.post('/comment/add/:server_id', function (req, res, next) {
     });
 
 });
-
+//Get server by IP
 router.get('/:ip', function (req, res) {
     req.sanitize('ip').escape();
     ServerDB.find({

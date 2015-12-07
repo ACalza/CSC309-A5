@@ -6,7 +6,7 @@ var uaparse = require('ua-parser-js');
 var User = require("../models/user");
 var error503 = "Status 503, internal server error";
 
-//NOTE: THIS IS FOR TESTING TEMPLATE ONLY. TY
+//Lists the users
 router.get('/userlist', function (req, res, next) {
     if (req.session.curUser) {
 
@@ -22,8 +22,7 @@ router.get('/userlist', function (req, res, next) {
     }
 });
 
-//NOTE: THIS IS FOR TESTING TEMPLATE ONLY.
-//REMOVE ONCE YOU HAVE A REAL ROUTE TY
+//Lists the servers
 router.get('/serverlist', function (req, res, next) {
     if (req.session.curUser) {
 
@@ -83,7 +82,7 @@ router.get('/serverlist', function (req, res, next) {
     }
 });
 
-
+//Find a user by mongo.objectID and return the JSON of the model
 router.get('/find/:id', function (req, res, next) {
     User.find({
         _id: req.params.id

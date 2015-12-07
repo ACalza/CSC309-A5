@@ -55,6 +55,23 @@ describe("Backend Tests on /user/", function() {
         });
 
     });
+    it('/edit should return 400 status for password mismatch', function(done) {
+        request(app)
+        .post("http://127.0.0.1:3000/user/register")
+        .send({
+            email: "",
+            password: "test",
+            confirmPassword: "tesat",
+            displayName: "displaytest",
+            description: "Description test"
+
+        })
+        .expect(400)
+        .end(function(err, res) {
+            done()
+        });
+
+    });
 });
 describe("Backend Tests on /profile/", function() {
     before(function() {
