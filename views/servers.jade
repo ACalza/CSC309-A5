@@ -83,13 +83,14 @@ block content
                 content = "";
 
                 content += "<thead><tr>";
-                content += "<th> Title </th><th>Map</th><th>Game Mode</th><th>Players</th><th>IP:Port</th>";
+                content += "<th>Rank</th><th> Title </th><th>Map</th><th>Game Mode</th><th>Players</th><th>IP:Port</th>";
 
                 content += "</tr></thead>";
 
                 content+= "<tbody>";
                 for (i = 0; i < servers.length; i++){
                     content += "<tr>";
+                    content += "<td>" + servers[i].rank + "</td>";
                     content += "<td><a class='colorless-link' href='/server/" + servers[i].server.ip + "/" + servers[i].server.port + "'>" + servers[i].server.title + "</a></td>";
                     content += "<td>" + servers[i].server.map + "</td>";
                     content += "<td>" + servers[i].server.gameMode + "</td>";
