@@ -1,7 +1,7 @@
 var util = require('../util');
 var uaparse = require('ua-parser-js');
 var models = require("../models/index");
-
+var bcrypt = require("bcrypt");
 
 var local = function (router, authCompleteCallback) {
     router.get('/local/login', function (req, res, next) {
@@ -27,12 +27,13 @@ var local = function (router, authCompleteCallback) {
             });
         }
         var loc = req.body.location;
-        pass = util.md5hash(pass);
+
+
         models.User.findOne({
-            email: email,
-            password: pass
+            email: email
         }, function (err, user) {
-            if (user) {
+            var hash = user.password;
+            if (user && bcrypt.compareSync(util.md5hash(req.body.password), hash)){
                 authCompleteCallback(user, req, res, next);
             } else {
                 //No match - wrong email or password

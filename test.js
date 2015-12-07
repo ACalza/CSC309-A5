@@ -2,6 +2,8 @@
 var assert = require("assert");
 var http = require('http');
 var server = require('./server');
+var app = require('./app');
+var request = require('supertest');
 
 
 
@@ -27,10 +29,54 @@ describe("Backend Tests on /server/", function() {
         done();
     });
 });
+describe("Backend Tests on /user/", function() {
+    before(function() {
+		server.listen(3000);
 
+	});
+	after(function() {
+		server.close();
+	});
+
+    it('/edit should return 400 status for invalid email', function(done) {
+        request(app)
+        .post("http://127.0.0.1:3000/user/register")
+        .send({
+            email: "",
+            password: "test",
+            confirmPassword: "test",
+            displayName: "displaytest",
+            description: "Description test"
+
+        })
+        .expect(400)
+        .end(function(err, res) {
+            done()
+        });
+
+    });
+    it('/edit should return 400 status for password mismatch', function(done) {
+        request(app)
+        .post("http://127.0.0.1:3000/user/register")
+        .send({
+            email: "",
+            password: "test",
+            confirmPassword: "tesat",
+            displayName: "displaytest",
+            description: "Description test"
+
+        })
+        .expect(400)
+        .end(function(err, res) {
+            done()
+        });
+
+    });
+});
 describe("Backend Tests on /profile/", function() {
     before(function() {
 		server.listen(3000);
+
 	});
 	after(function() {
 		server.close();
@@ -44,5 +90,4 @@ describe("Backend Tests on /profile/", function() {
         });
 
     });
-
 });
