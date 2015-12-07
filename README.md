@@ -11,6 +11,8 @@ your account to give more information about yourself.
 
 - In the server list page, you can search servers, sort them according to their names, maps, players etc.
 
+- Also users can see the recommended servers listed with ranks, based on their likes. Servers with higher ranks, are more likely to be the users preference.
+
 - You can also filter them by typing into the search box on the upper right corner or into the fields under the list.
 
 - From the menu at the upper left corner, you can choose the number of servers to view per page.
