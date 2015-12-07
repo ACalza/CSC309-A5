@@ -260,9 +260,8 @@ function filterAndSort(req, res) {
         }
         //console.log(req.body.possibleServers[server])
         serverRecomendations.push({
-            rank: req.body.possibleServers[server].rank,
-            ip: req.body.possibleServers[server].server.ip,
-            port: req.body.possibleServers[server].server.port
+            rank: max.rank,
+            server: max.server
         });
     }
     console.log(serverRecomendations);
